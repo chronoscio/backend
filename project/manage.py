@@ -2,6 +2,12 @@
 import os
 import sys
 
+# Remote Debugging
+import ptvsd
+
+ptvsd.enable_attach("my_secret", address = ('0.0.0.0', 3500))
+
+
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "interactivemap.settings")
     try:
