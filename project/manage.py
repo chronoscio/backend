@@ -4,8 +4,16 @@ import sys
 
 # Remote Debugging
 import ptvsd
+import socket
 
-ptvsd.enable_attach("my_secret", address = ('0.0.0.0', 3500))
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.close()
+try:
+    ptvsd.enable_attach("my_secret", address = ('0.0.0.0', 3500))
+except:
+    pass
+
+
 
 
 if __name__ == "__main__":
