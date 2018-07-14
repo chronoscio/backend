@@ -3,6 +3,8 @@ services:
   db:
     image: mdillon/postgis:10-alpine
     container_name: postgres01
+    ports:
+      - "5432"
   nginx:
     image: nginx:1.13-alpine
     container_name: nginx01
@@ -21,6 +23,7 @@ services:
       - db
     volumes:
       - ./project:/src
+    entrypoint: ./.wait-for-postgres.sh postgres 5432
     expose:
       - "80"
     ports:
