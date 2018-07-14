@@ -1,0 +1,26 @@
+version: '3'
+services:
+  db:
+    image: postgres:10.3-alpine
+    container_name: postgres01
+  nginx:
+    image: nginx:1.13-alpine
+    container_name: nginx01
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./project:/src
+      - ./config/nginx:/etc/nginx/conf.d
+    depends_on:
+      - web
+  web:
+    build: .
+    container_name: django01
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && gunicorn interactivemap.wsgi -b 0.0.0.0:8000"
+    depends_on:
+      - db
+    volumes:
+      - ./project:/src
+    expose:
+      - "8000"
+    restart: always
