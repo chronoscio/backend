@@ -23,7 +23,7 @@ services:
       - db
     volumes:
       - ./project:/src
-    entrypoint: python ./.wait-for-postgres.py
+#    entrypoint: python ./.wait-for-postgres.py
     expose:
       - "80"
     ports:
