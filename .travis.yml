@@ -10,8 +10,6 @@ services:
 
 before_install:
   - docker-compose build
-  - docker-compose up -d
-  - docker ps -a
 
 script:
-  - docker-compose exec web python manage.py test
+  - docker-compose run --no-deps --rm web python manage.py test
