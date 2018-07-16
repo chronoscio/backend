@@ -22,7 +22,7 @@ services:
   web:
     build: .
     container_name: django01
-    command: bash -c "bash .boot.sh" #bash -c "python manage.py makemigrations && python manage.py migrate && gunicorn interactivemap.wsgi -b 0.0.0.0:80"
+    #command: bash -c "python manage.py makemigrations && python manage.py migrate && gunicorn interactivemap.wsgi -b 0.0.0.0:80"
     depends_on:
       - db
     volumes:
