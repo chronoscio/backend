@@ -19,4 +19,3 @@ python manage.py makemigrations
 python manage.py migrate
 
 exec $cmd
-#gunicorn interactivemap.wsgi -b 0.0.0.0:80
