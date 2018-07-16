@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'graphene_django',
+    'api'
 #    'django.contrib.staticfiles',
 ]
 
@@ -122,3 +124,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Graphene
+GRAPHENE = {
+    'SCHEMA': 'app.schema.schema' # Where your Graphene schema lives
+}
