@@ -136,3 +136,6 @@ venv.bak/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# Project Enviornment Files
+django.env

@@ -11,4 +11,4 @@ RUN pip install -r /config/requirements.txt
 RUN mkdir /src
 WORKDIR /src
 EXPOSE 80
-CMD ["/bin/ash", "./wait_for_postgres.sh", "gunicorn interactivemap.wsgi -b 0.0.0.0:80"]
+CMD ["/bin/ash", "./init.sh", "gunicorn interactivemap.wsgi -b 0.0.0.0:80"]
