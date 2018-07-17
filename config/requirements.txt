@@ -2,6 +2,7 @@ Django==2.0.7
 gunicorn==19.7.0
 psycopg2==2.7.4
 pylint==1.8.4
+pylint-django==0.11.1
 ptvsd==3.0.0
 graphene-django==2.0.0
 required==0.3.3
