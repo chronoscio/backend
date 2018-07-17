@@ -5,10 +5,8 @@ services:
     container_name: postgres01
     ports:
       - "5432"
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=postgres
-      - POSTGRES_PASSWORD=postgres
+    env_file:
+      - postgres.env
   nginx:
     image: nginx:1.13-alpine
     container_name: nginx01

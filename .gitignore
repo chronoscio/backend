@@ -139,3 +139,4 @@ venv.bak/
 
 # Project Enviornment Files
 django.env
+postgres.env
