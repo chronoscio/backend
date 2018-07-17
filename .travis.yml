@@ -10,8 +10,9 @@ services:
 
 install:
   - mv django.env.sample django.env
+  - mv postgres.env.sample postgres.env
   - docker-compose pull
   - docker-compose build
 
 script:
-  - docker-compose run --service-ports web sh wait_for_postgres.sh python manage.py test
+  - docker-compose run --service-ports web sh init.sh python manage.py test
