@@ -9,6 +9,7 @@ services:
   - docker
 
 install:
+  - mv django.env.sample django.env
   - docker-compose pull
   - docker-compose build
 
