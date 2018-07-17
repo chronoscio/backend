@@ -14,4 +14,4 @@ install:
   - docker-compose build
 
 script:
-  - docker-compose run --service-ports web sh wait_for_postgres.sh python manage.py test
+  - docker-compose run --service-ports web sh init.sh python manage.py test
