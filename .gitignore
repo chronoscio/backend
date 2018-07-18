@@ -140,3 +140,7 @@ venv.bak/
 # Project Enviornment Files
 django.env
 postgres.env
+
+# Wiki data
+project/wiki_data/*
+!project/wiki_data/dummy
