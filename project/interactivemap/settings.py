@@ -36,9 +36,10 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.gis',
     'graphene_django',
-    'api'
-#    'django.contrib.staticfiles',
+    'api',
+    'django.contrib.staticfiles',
 ]
 
 MIDDLEWARE = [
@@ -127,5 +128,5 @@ STATIC_URL = '/static/'
 
 # Graphene
 GRAPHENE = {
-    'SCHEMA': 'app.schema.schema' # Where your Graphene schema lives
+    'SCHEMA': 'api.schema.schema' # Where your Graphene schema lives
 }

@@ -5,4 +5,3 @@ pylint==1.8.4
 pylint-django==0.11.1
 ptvsd==3.0.0
 graphene-django==2.0.0
-required==0.3.3

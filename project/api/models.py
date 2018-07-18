@@ -1,5 +1,5 @@
+from django.core.exceptions import ValidationError
 from django.contrib.gis.db import models
-from required import Requires, R
 
 # Create your models here.
 class Nation(models.Model):
@@ -7,12 +7,10 @@ class Nation(models.Model):
     local_name = models.CharField(max_length=30)
     wikipedia = models.URLField()
 
-class Territory(models.Model):
-    REQUIREMENTS = (
-        Requires("end_date", "start_date") +
-        Requires("end_date", R("end_date") > R("start_date"))
-    )
+    def __str___(self):
+        return self.name
 
+class Territory(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
 
@@ -20,5 +18,11 @@ class Territory(models.Model):
 
     nation = models.ForeignKey(Nation, on_delete=models.CASCADE)
 
-    def validate(self, data):
-        self.REQUIREMENTS.validate(data)
+    def clean(self):
+        if self.end_date < self.start_date:
+            raise ValidationError('Start date must be before or equal to end date.')
+
+    def __str__(self):
+        return '%s: %s - %s' % (self.nation.name,
+                                self.start_date.strftime('%m/%d/%Y'),
+                                self.end_date.strftime('%m/%d/%Y'))

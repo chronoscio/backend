@@ -7,8 +7,6 @@ RUN sed -i -e 's/v3\.7/edge/g' /etc/apk/repositories && \
 RUN apk update && \
     apk add --virtual build-deps gcc python-dev musl-dev && \
     apk add postgresql-dev bash && \
-    apk add libressl2.7-libcrypto && \
-    apk add --no-cache alpine-sdk && \
     apk add --no-cache --virtual .build-deps-testing \
         --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
         gdal-dev \
