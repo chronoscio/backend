@@ -16,16 +16,6 @@ def convert_geo_field_to_string(field, registry=None):
 
     return graphene.String()
 
-class NationCreateInput(graphene.InputObjectType):
-    """
-    Class created to accept input data
-    from the interactive graphql console.
-    """
-
-    name = graphene.String(required=True)
-    local_name = graphene.String(required=False)
-    wikipedia = graphene.String(required=False)
-
 #Objects
 class Nation(DjangoObjectType):
     """Corresponds to the Nation model in django"""
@@ -38,6 +28,27 @@ class Territory(DjangoObjectType):
 
     class Meta:
         model = TerritoryModel
+
+#InputObjectTypes
+class NationCreateInput(graphene.InputObjectType):
+    """
+    Class created to accept input data for the Nation object
+    """
+
+    name = graphene.String(required=True)
+    local_name = graphene.String(required=False)
+    wikipedia = graphene.String(required=False)
+
+
+class TerritoryCreateInput(graphene.InputObjectType):
+    """
+    Class created to accept input data for the Territory object
+    """
+
+    start_date = graphene.types.datetime.Date(required=True)
+    end_date = graphene.types.datetime.Date(required=True)
+    geo = graphene.types.json.JSONString(required=True)
+    nation = graphene.Field(Nation)
 
 #Nation operations
 class CreateNation(graphene.relay.ClientIDMutation):
@@ -81,6 +92,47 @@ class UpdateNation(graphene.relay.ClientIDMutation):
             # return an error if something wrong happens
             return cls(updated_nation=None, errors=get_errors(e))
 
+class CreateTerritory(graphene.relay.ClientIDMutation):
+
+    class Input:
+        # NationCreateInput class used as argument here.
+        territory = graphene.Argument(TerritoryCreateInput)
+
+    new_territory = graphene.Field(Territory)
+
+    @classmethod
+    def mutate_and_get_payload(cls, root, info, **args):
+    # def mutate_and_get_payload(cls, args, context, info):
+
+        territory_data = args.get('territory') # get the territory input from the args
+        territory = TerritoryModel() # get an instance of the territory model here
+        new_territory = update_create_instance(territory, territory_data) # use custom function to create territory
+
+        return cls(new_territory=new_territory) # newly created territory instance returned.
+
+class UpdateTerritory(graphene.relay.ClientIDMutation):
+
+    class Input:
+        territory = graphene.Argument(TerritoryCreateInput) # get the territory input from the args
+        id = graphene.String(required=True) # get the territory id
+
+    errors = graphene.List(graphene.String)
+    updated_territory = graphene.Field(Territory)
+
+    @classmethod
+    def mutate_and_get_payload(cls, args, context, info):
+
+        try:
+            territory_instance = get_object(TerritoryModel, args['id']) # get territory by id
+            if territory_instance:
+                # modify and update territory model instance
+                territory_data = args.get('territory')
+                updated_territory = update_create_instance(territory_instance, territory_data)
+                return cls(updated_territory=updated_territory)
+        except ValidationError as e:
+            # return an error if something wrong happens
+            return cls(updated_territory=None, errors=get_errors(e))
+
 #Query
 class Query(graphene.ObjectType):
     """Retrieves data for GraphQL queries"""
@@ -104,5 +156,8 @@ class Mutation(graphene.ObjectType):
 
     create_nation = CreateNation.Field()
     update_nation = UpdateNation.Field()
+
+    create_territory = CreateTerritory.Field()
+    update_territory = UpdateTerritory.Field()
 
 SCHEMA = graphene.Schema(query=Query, mutation=Mutation)

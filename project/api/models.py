@@ -16,7 +16,9 @@ class Territory(models.Model):
 
     geo = models.GeometryField()
 
-    nation = models.ForeignKey(Nation, on_delete=models.CASCADE)
+    nation = models.ForeignKey(Nation,
+                               related_name='territories',
+                               on_delete=models.CASCADE)
 
     def clean(self):
         if self.end_date < self.start_date:
