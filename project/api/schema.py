@@ -1,3 +1,4 @@
+import json
 import graphene
 
 from graphene_django import DjangoObjectType
@@ -10,11 +11,21 @@ from .models import Territory as TerritoryModel
 from .models import Nation as NationModel
 from .helpers import *
 
+#Geometry Field Conversion
+class GeoJSON(graphene.Scalar):
+
+    @classmethod
+    def serialize(cls, value):
+        return json.loads(value.geojson)
+
 @convert_django_field.register(GeometryField)
-def convert_geo_field_to_string(field, registry=None):
+def convert_geo_field_to_geojson(field, registry=None):
     """Conversion for the geodjango Geometry field"""
 
-    return graphene.String()
+    return graphene.Field(
+        GeoJSON,
+        description=field.help_text
+    )
 
 #Objects
 class Nation(DjangoObjectType):
@@ -47,8 +58,8 @@ class TerritoryCreateInput(graphene.InputObjectType):
 
     start_date = graphene.types.datetime.Date(required=True)
     end_date = graphene.types.datetime.Date(required=True)
-    geo = graphene.types.json.JSONString(required=True)
-    nation = graphene.Field(Nation)
+    geo = graphene.String(required=True)
+    nation = graphene.ID(required=True)
 
 #Nation operations
 class CreateNation(graphene.relay.ClientIDMutation):
@@ -106,7 +117,17 @@ class CreateTerritory(graphene.relay.ClientIDMutation):
 
         territory_data = args.get('territory') # get the territory input from the args
         territory = TerritoryModel() # get an instance of the territory model here
-        new_territory = update_create_instance(territory, territory_data) # use custom function to create territory
+        new_territory = update_create_instance(territory,
+                                               territory_data,
+                                               exception=['id', 'nation']) # use custom function to create territory
+
+        try:
+            nation = NationModel.objects.get(pk=territory_data.nation)
+        except NationModel.DoesNotExist:
+            return CreateNation(ok=False)
+
+        setattr(new_territory, 'nation', nation)
+        new_territory.save()
 
         return cls(new_territory=new_territory) # newly created territory instance returned.
 
@@ -140,12 +161,12 @@ class Query(graphene.ObjectType):
     nations = graphene.List(Nation)
     territories = graphene.List(Territory)
 
-    def resolve_territories(self):
+    def resolve_territories(self, info):
         """Returns a list of all Territories"""
 
         return TerritoryModel.objects.all()
 
-    def resolve_nations(self):
+    def resolve_nations(self, info):
         """Returns a list of all Nations"""
 
         return NationModel.objects.all()

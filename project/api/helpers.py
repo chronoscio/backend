@@ -12,7 +12,8 @@ def update_create_instance(instance, args, exception=['id']):
     if instance:
         [setattr(instance, key, value) for key, value in args.items() if key not in exception]
 
-    instance.save()
+    if 'nation' not in exception:
+        instance.save()
 
     return instance
 
