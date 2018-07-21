@@ -47,8 +47,8 @@ class NationCreateInput(graphene.InputObjectType):
     """
 
     name = graphene.String(required=True)
-    local_name = graphene.String(required=False)
-    wikipedia = graphene.String(required=False)
+    local_name = graphene.String(required=True)
+    wikipedia = graphene.String(required=True)
 
 
 class TerritoryCreateInput(graphene.InputObjectType):
@@ -72,7 +72,6 @@ class CreateNation(graphene.relay.ClientIDMutation):
 
     @classmethod
     def mutate_and_get_payload(cls, root, info, **args):
-    # def mutate_and_get_payload(cls, args, context, info):
 
         nation_data = args.get('nation') # get the nation input from the args
         nation = NationModel() # get an instance of the nation model here
@@ -90,10 +89,10 @@ class UpdateNation(graphene.relay.ClientIDMutation):
     updated_nation = graphene.Field(Nation)
 
     @classmethod
-    def mutate_and_get_payload(cls, args, context, info):
+    def mutate_and_get_payload(cls, root, info, **args):
 
         try:
-            nation_instance = get_object(NationModel, args['id']) # get nation by id
+            nation_instance = get_object(NationModel, args['id'])# get nation by id
             if nation_instance:
                 # modify and update nation model instance
                 nation_data = args.get('nation')
@@ -113,7 +112,6 @@ class CreateTerritory(graphene.relay.ClientIDMutation):
 
     @classmethod
     def mutate_and_get_payload(cls, root, info, **args):
-    # def mutate_and_get_payload(cls, args, context, info):
 
         territory_data = args.get('territory') # get the territory input from the args
         territory = TerritoryModel() # get an instance of the territory model here
@@ -121,11 +119,7 @@ class CreateTerritory(graphene.relay.ClientIDMutation):
                                                territory_data,
                                                exception=['id', 'nation']) # use custom function to create territory
 
-        try:
-            nation = NationModel.objects.get(pk=territory_data.nation)
-        except NationModel.DoesNotExist:
-            return CreateNation(ok=False)
-
+        nation = NationModel.objects.get(pk=territory_data.nation)
         setattr(new_territory, 'nation', nation)
         new_territory.save()
 
@@ -141,7 +135,7 @@ class UpdateTerritory(graphene.relay.ClientIDMutation):
     updated_territory = graphene.Field(Territory)
 
     @classmethod
-    def mutate_and_get_payload(cls, args, context, info):
+    def mutate_and_get_payload(cls, root, info, **args):
 
         try:
             territory_instance = get_object(TerritoryModel, args['id']) # get territory by id
