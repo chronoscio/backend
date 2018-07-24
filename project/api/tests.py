@@ -89,7 +89,7 @@ class APITest(TestCase):
     def test_graphql_can_query_nations(self):
         query = '''
                 {
-                    nations {
+                    allNations {
                         name
                     }
                 }
@@ -97,12 +97,12 @@ class APITest(TestCase):
         executed = execute_test_client_api_query(query)
         data = executed.get('data')
         print(data)
-        self.assertEqual(data['nations'][0]['name'], 'Test Nation')
+        self.assertEqual(data['allNations'][0]['name'], 'Test Nation')
 
     def test_graphql_can_query_territories(self):
         query = '''
                 {
-                    territories {
+                    allTerritories {
                         nation {
                             name
                         }
@@ -112,4 +112,32 @@ class APITest(TestCase):
         executed = execute_test_client_api_query(query)
         data = executed.get('data')
         print(data)
-        self.assertEqual(data['territories'][0]['nation']['name'], 'Test Nation')
+        self.assertEqual(data['allTerritories'][0]['nation']['name'], 'Test Nation')
+
+    def test_graphql_can_query_nation(self):
+        query = '''
+                {
+                    nation(id: 1) {
+                        name
+                    }
+                }
+                '''
+        executed = execute_test_client_api_query(query)
+        data = executed.get('data')
+        print(data)
+        self.assertEqual(data['nation']['name'], 'Test Nation')
+
+    def test_graphql_can_query_territory(self):
+        query = '''
+                {
+                    territory(id: 1) {
+                        nation {
+                            name
+                        }
+                    }
+                }
+                '''
+        executed = execute_test_client_api_query(query)
+        data = executed.get('data')
+        print(data)
+        self.assertEqual(data['territory']['nation']['name'], 'Test Nation')

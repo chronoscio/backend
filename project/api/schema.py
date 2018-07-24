@@ -152,18 +152,43 @@ class UpdateTerritory(graphene.relay.ClientIDMutation):
 class Query(graphene.ObjectType):
     """Retrieves data for GraphQL queries"""
 
-    nations = graphene.List(Nation)
-    territories = graphene.List(Territory)
+    all_territories = graphene.List(Territory)
+    all_nations = graphene.List(Nation)
 
-    def resolve_territories(self, info):
+    territory = graphene.Field(Territory,
+                               id=graphene.Int())
+    nation = graphene.Field(Nation,
+                            id=graphene.Int())
+
+    def resolve_all_territories(self, info):
         """Returns a list of all Territories"""
 
         return TerritoryModel.objects.all()
 
-    def resolve_nations(self, info):
+    def resolve_all_nations(self, info):
         """Returns a list of all Nations"""
 
         return NationModel.objects.all()
+
+    def resolve_territory(self, info, **kwargs):
+        """Returns a specific Territory"""
+
+        id = kwargs.get('id')
+
+        if id is not None:
+            return TerritoryModel.objects.get(pk=id)
+
+        return None
+
+    def resolve_nation(self, info, **kwargs):
+        """Returns a specific Nation"""
+
+        id = kwargs.get('id')
+
+        if id is not None:
+            return NationModel.objects.get(pk=id)
+
+        return None
 
 #Mutation
 class Mutation(graphene.ObjectType):
