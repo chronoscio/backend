@@ -22,12 +22,17 @@ build: ## Builds and tags containers
 run: ## Builds, starts, and runs containers
 	docker-compose up --build -d
 
+stop: ## Stops running containers
+	docker-compose stop
+
+# Debug tools
 run_debug: ## Builds, starts, and runs containers, running the built-in Django web server
 	docker-compose run --service-ports web sh init.sh python manage.py runserver 0.0.0.0:81
 
 exec_debug: ## Runs built-in Django web server
 	docker-compose exec web python manage.py runserver 0.0.0.0:81
 
+# Misc
 test: ## Builds, starts, and runs containers, running the django tests
 	docker-compose run --service-ports web sh init.sh python manage.py test
 
