@@ -13,6 +13,10 @@ install:
   - mv postgres.env.sample postgres.env
   - docker-compose pull
   - docker-compose build
+  - pip install coveralls
 
 script:
-  - docker-compose run --service-ports web sh init.sh python manage.py test
+  - docker-compose run --service-ports web sh init.sh coverage run --source=api manage.py test
+
+after_success:
+  - coveralls
