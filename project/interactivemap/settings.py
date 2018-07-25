@@ -130,5 +130,5 @@ STATIC_URL = '/static/'
 
 # Graphene
 GRAPHENE = {
-    'SCHEMA': 'api.schema.SCHEMA' # Where your Graphene schema lives
+    'SCHEMA': 'interactivemap.schema.schema' # Where your Graphene schema lives
 }
