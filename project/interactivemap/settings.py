@@ -37,9 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.gis',
-    'graphene_django',
-    'api',
     'django.contrib.staticfiles',
+    'graphene_django',
+    'simple_history',
+    'api'
 ]
 
 MIDDLEWARE = [
@@ -50,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'interactivemap.urls'
@@ -128,5 +130,5 @@ STATIC_URL = '/static/'
 
 # Graphene
 GRAPHENE = {
-    'SCHEMA': 'api.schema.SCHEMA' # Where your Graphene schema lives
+    'SCHEMA': 'interactivemap.schema.schema' # Where your Graphene schema lives
 }
