@@ -13,10 +13,11 @@ install:
   - mv postgres.env.sample postgres.env
   - docker-compose pull
   - docker-compose build
-  - pip install coveralls
+  - pip install coverage
+  - pip install codacy-coverage
 
 script:
-  - docker-compose run --service-ports web sh init.sh coverage run --source=api manage.py test
+  - docker-compose run -e CODACY_PROJECT_TOKEN=${CODACY_PROJECT_TOKEN} --service-ports web sh init.sh coverage run --source=api manage.py test
 
 after_success:
-  - coveralls
+  - python-codacy-coverage -r coverage.xml
