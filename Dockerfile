@@ -14,7 +14,7 @@ RUN apk update && \
         proj4-dev
 
 RUN mkdir /config
-ADD /config/requirements.txt /config/
+COPY /config/requirements.txt /config/
 RUN pip install -r /config/requirements.txt
 RUN mkdir /src
 WORKDIR /src

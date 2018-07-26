@@ -15,4 +15,7 @@ install:
   - docker-compose build
 
 script:
-  - docker-compose run --service-ports web sh init.sh python manage.py test
+  - docker-compose run -e CODACY_PROJECT_TOKEN=$CODACY_PROJECT_TOKEN --service-ports web sh init.sh python -m coverage run --source=api manage.py test
+
+after_success:
+  - python-codacy-coverage -r coverage.xml

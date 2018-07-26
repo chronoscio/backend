@@ -3,6 +3,7 @@ import graphene
 
 from graphene_django import DjangoObjectType
 from graphene_django.converter import convert_django_field
+from graphene_django.filter import DjangoFilterConnectionField
 
 from django.core.exceptions import ValidationError
 from django.contrib.gis.db.models.fields import GeometryField
@@ -33,12 +34,16 @@ class Nation(DjangoObjectType):
 
     class Meta:
         model = NationModel
+        filter_fields = ['name']
+        interfaces = (graphene.relay.Node, )
 
 class Territory(DjangoObjectType):
     """Corresponds to the Territory model in django"""
 
     class Meta:
         model = TerritoryModel
+        filter_fields = ['start_date', 'end_date', 'nation']
+        interfaces = (graphene.relay.Node, )
 
 #InputObjectTypes
 class NationCreateInput(graphene.InputObjectType):
@@ -152,18 +157,41 @@ class UpdateTerritory(graphene.relay.ClientIDMutation):
 class Query(graphene.ObjectType):
     """Retrieves data for GraphQL queries"""
 
-    nations = graphene.List(Nation)
-    territories = graphene.List(Territory)
+    all_territories = DjangoFilterConnectionField(Territory)
+    all_nations = DjangoFilterConnectionField(Nation)
 
-    def resolve_territories(self, info):
+    territory = graphene.relay.Node.Field(Territory)
+    nation = graphene.relay.Node.Field(Nation)
+
+    ''''def resolve_all_territories(self, info):
         """Returns a list of all Territories"""
 
         return TerritoryModel.objects.all()
 
-    def resolve_nations(self, info):
+    def resolve_all_nations(self, info):
         """Returns a list of all Nations"""
 
         return NationModel.objects.all()
+
+    def resolve_territory(self, info, **kwargs):
+        """Returns a specific Territory"""
+
+        id = kwargs.get('id')
+
+        if id is not None:
+            return TerritoryModel.objects.get(pk=id)
+
+        return None
+
+    def resolve_nation(self, info, **kwargs):
+        """Returns a specific Nation"""
+
+        id = kwargs.get('id')
+
+        if id is not None:
+            return NationModel.objects.get(pk=id)
+
+        return None'''
 
 #Mutation
 class Mutation(graphene.ObjectType):
@@ -175,4 +203,4 @@ class Mutation(graphene.ObjectType):
     create_territory = CreateTerritory.Field()
     update_territory = UpdateTerritory.Field()
 
-SCHEMA = graphene.Schema(query=Query, mutation=Mutation)
+schema = graphene.Schema(query=Query, mutation=Mutation)

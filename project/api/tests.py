@@ -2,7 +2,7 @@ from django.test import TestCase, RequestFactory
 from django.contrib.gis.geos import GEOSGeometry
 from graphene.test import Client
 
-from .schema import SCHEMA
+from .schema import schema
 from .models import *
 
 def execute_test_client_api_query(api_query, user=None, variable_values=None, **kwargs):
@@ -10,9 +10,9 @@ def execute_test_client_api_query(api_query, user=None, variable_values=None, **
     Returns the results of executing a graphQL query using the graphene test client.  This is a helper method for our tests
     """
     request_factory = RequestFactory()
-    context_value = request_factory.get('/api/')
+    context_value = request_factory.get('/graphql/')
     context_value.user = user
-    client = Client(SCHEMA)
+    client = Client(schema)
     executed = client.execute(api_query, context_value=context_value, variable_values=variable_values, **kwargs)
     return executed
 
@@ -89,7 +89,44 @@ class APITest(TestCase):
     def test_graphql_can_query_nations(self):
         query = '''
                 {
-                    nations {
+                    allNations {
+                        edges {
+                            node {
+                                name
+                            }
+                        }
+                    }
+                }
+                '''
+        executed = execute_test_client_api_query(query)
+        data = executed.get('data')
+        print(data)
+        self.assertEqual(data['allNations']['edges'][0]['node']['name'], 'Test Nation')
+
+    def test_graphql_can_query_territories(self):
+        query = '''
+                {
+                    allTerritories {
+                        edges {
+                            node {
+                                id
+                                nation {
+                                    name
+                                }
+                            }
+                        }
+                    }
+                }
+                '''
+        executed = execute_test_client_api_query(query)
+        data = executed.get('data')
+        print(data)
+        self.assertEqual(data['allTerritories']['edges'][0]['node']['nation']['name'], 'Test Nation')
+
+    def test_graphql_can_query_nation(self):
+        query = '''
+                {
+                    nation (id: "TmF0aW9uOjE=") {
                         name
                     }
                 }
@@ -97,12 +134,12 @@ class APITest(TestCase):
         executed = execute_test_client_api_query(query)
         data = executed.get('data')
         print(data)
-        self.assertEqual(data['nations'][0]['name'], 'Test Nation')
+        self.assertEqual(data['nation']['name'], 'Test Nation')
 
-    def test_graphql_can_query_territories(self):
+    def test_graphql_can_query_territory(self):
         query = '''
                 {
-                    territories {
+                    territory (id: "VGVycml0b3J5OjE=") {
                         nation {
                             name
                         }
@@ -112,4 +149,4 @@ class APITest(TestCase):
         executed = execute_test_client_api_query(query)
         data = executed.get('data')
         print(data)
-        self.assertEqual(data['territories'][0]['nation']['name'], 'Test Nation')
+        self.assertEqual(data['territory']['nation']['name'], 'Test Nation')
