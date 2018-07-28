@@ -21,12 +21,12 @@ class APITest(TestCase):
     @classmethod
     def setUpTestData(self):
         new_nation = Nation.objects.create(name="Test Nation",
-                              local_name="Test Nation",
-                              wikipedia="https://en.wikipedia.org/wiki/Test")
+                                           color="fff",
+                                           wikipedia="https://en.wikipedia.org/wiki/Test")
         Territory.objects.create(start_date="1444-11-11",
-                              end_date="2018-01-01",
-                              nation=new_nation,
-                              geo=GEOSGeometry('{"type":"Polygon","coordinates":[[[-6.0, 40.0],[-5.0, 40.0],[-5.0, 38.0],[-7.0, 37.0],[-6.0, 40.0]]]}'))
+                                 end_date="2018-01-01",
+                                 nation=new_nation,
+                                 geo=GEOSGeometry('{"type": "MultiPolygon","coordinates": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}'))
 
     def test_graphql_can_create_nation(self):
         query = '''
@@ -34,7 +34,7 @@ class APITest(TestCase):
                     createNation(input: $input) {
                         newNation {
                             name
-                            localName
+                            color
                             wikipedia
                             id
                         }
@@ -45,7 +45,7 @@ class APITest(TestCase):
                             "input": {
                                 "nation": {
                                    "name": "Test Nation",
-                                   "localName": "\u30b5\u30f3\u30d7\u30eb\u30c7\u30fc\u30bf",
+                                   "color": "fff",
                                    "wikipedia": "https://en.wikipedia.org/wiki/Test"
                                 }
                             }
@@ -77,14 +77,14 @@ class APITest(TestCase):
                                     "startDate": "2010-07-20",
                                     "endDate": "2018-07-20",
                                     "nation": 1,
-                                    "geo": "{\"type\":\"Polygon\",\"coordinates\":[[[-6.0, 40.0],[-5.0, 40.0],[-5.0, 38.0],[-7.0, 37.0],[-6.0, 40.0]]]}"
+                                    "geo": "{\"type\": \"MultiPolygon\",\"coordinates\": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}"
                                 }
                             }
                           }
         executed = execute_test_client_api_query(query, variable_values=variable_values)
         data = executed.get('data')
         print(data)
-        self.assertEqual(data['createTerritory']['newTerritory']['geo']['type'], 'Polygon')
+        self.assertEqual(data['createTerritory']['newTerritory']['geo']['type'], 'MultiPolygon')
 
     def test_graphql_can_query_nations(self):
         query = '''

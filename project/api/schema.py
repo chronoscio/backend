@@ -6,7 +6,7 @@ from graphene_django.converter import convert_django_field
 from graphene_django.filter import DjangoFilterConnectionField
 
 from django.core.exceptions import ValidationError
-from django.contrib.gis.db.models.fields import GeometryField
+from django.contrib.gis.db.models.fields import MultiPolygonField
 
 from .models import Territory as TerritoryModel
 from .models import Nation as NationModel
@@ -19,9 +19,9 @@ class GeoJSON(graphene.Scalar):
     def serialize(cls, value):
         return json.loads(value.geojson)
 
-@convert_django_field.register(GeometryField)
+@convert_django_field.register(MultiPolygonField)
 def convert_geo_field_to_geojson(field, registry=None):
-    """Conversion for the geodjango Geometry field"""
+    """Conversion for the geodjango MultiPolygon field"""
 
     return graphene.Field(
         GeoJSON,
@@ -52,8 +52,10 @@ class NationCreateInput(graphene.InputObjectType):
     """
 
     name = graphene.String(required=True)
-    local_name = graphene.String(required=True)
-    wikipedia = graphene.String(required=True)
+    color = graphene.String(required=True)
+    aliases = graphene.String(required=False)
+    description = graphene.String(required=False)
+    wikipedia = graphene.String(required=False)
 
 
 class TerritoryCreateInput(graphene.InputObjectType):
@@ -71,18 +73,18 @@ class CreateNation(graphene.relay.ClientIDMutation):
 
     class Input:
         # NationCreateInput class used as argument here.
-        nation = graphene.Argument(NationCreateInput)
+        nation = NationCreateInput(required=True)
 
     new_nation = graphene.Field(Nation)
 
     @classmethod
-    def mutate_and_get_payload(cls, root, info, **args):
+    def mutate_and_get_payload(cls, root, info, **input):
+        new_nation = update_create_instance(NationModel(), input.get("nation"))
+        #nation_data = args.get('nation') # get the nation input from the args
+        #nation = NationModel() # get an instance of the nation model here
+        #new_nation = update_create_instance(nation, nation_data) # use custom function to create nation
 
-        nation_data = args.get('nation') # get the nation input from the args
-        nation = NationModel() # get an instance of the nation model here
-        new_nation = update_create_instance(nation, nation_data) # use custom function to create nation
-
-        return cls(new_nation=new_nation) # newly created nation instance returned.
+        return CreateNation(new_nation=new_nation) # newly created nation instance returned.
 
 class UpdateNation(graphene.relay.ClientIDMutation):
 
@@ -194,13 +196,13 @@ class Query(graphene.ObjectType):
         return None'''
 
 #Mutation
-class Mutation(graphene.ObjectType):
+class Mutation(graphene.AbstractType, graphene.ObjectType):
     """Maniuplates data for GraphQL mutations"""
 
     create_nation = CreateNation.Field()
-    update_nation = UpdateNation.Field()
+    '''update_nation = UpdateNation.Field()
 
     create_territory = CreateTerritory.Field()
-    update_territory = UpdateTerritory.Field()
+    update_territory = UpdateTerritory.Field()'''
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
