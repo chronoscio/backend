@@ -120,7 +120,7 @@ class CreateTerritory(graphene.relay.ClientIDMutation):
     @classmethod
     def mutate_and_get_payload(cls, root, info, **args):
 
-        territory_data = args.get('territory') # get the territory input from the args
+        """territory_data = args.get('territory') # get the territory input from the args
         territory = TerritoryModel() # get an instance of the territory model here
         new_territory = update_create_instance(territory,
                                                territory_data,
@@ -128,14 +128,18 @@ class CreateTerritory(graphene.relay.ClientIDMutation):
 
         nation = NationModel.objects.get(pk=territory_data.nation)
         setattr(new_territory, 'nation', nation)
+        new_territory.save()"""
+        new_territory = update_create_instance(TerritoryModel(), input.get("territory"))
+        nation = NationModel.objects.get(pk=territory_data.nation)
+        setattr(new_territory, 'nation', nation)
         new_territory.save()
 
-        return cls(new_territory=new_territory) # newly created territory instance returned.
+        return CreateTerritory(new_territory=new_territory) # newly created territory instance returned.
 
 class UpdateTerritory(graphene.relay.ClientIDMutation):
 
     class Input:
-        territory = graphene.Argument(TerritoryCreateInput) # get the territory input from the args
+        territory = TerritoryCreateInput(required=True) # get the territory input from the args
         id = graphene.String(required=True) # get the territory id
 
     errors = graphene.List(graphene.String)
@@ -200,9 +204,9 @@ class Mutation(graphene.AbstractType, graphene.ObjectType):
     """Maniuplates data for GraphQL mutations"""
 
     create_nation = CreateNation.Field()
-    '''update_nation = UpdateNation.Field()
+    update_nation = UpdateNation.Field()
 
     create_territory = CreateTerritory.Field()
-    update_territory = UpdateTerritory.Field()'''
+    update_territory = UpdateTerritory.Field()
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

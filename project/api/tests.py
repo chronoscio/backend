@@ -44,7 +44,7 @@ class APITest(TestCase):
         variable_values = {
                             "input": {
                                 "nation": {
-                                   "name": "Test Nation",
+                                   "name": "Created Test Nation",
                                    "color": "fff",
                                    "wikipedia": "https://en.wikipedia.org/wiki/Test"
                                 }
@@ -53,7 +53,7 @@ class APITest(TestCase):
         executed = execute_test_client_api_query(query, variable_values=variable_values)
         data = executed.get('data')
         print(data)
-        self.assertEqual(data['createNation']['newNation']['name'], 'Test Nation')
+        self.assertEqual(data['createNation']['newNation']['name'], 'Created Test Nation')
 
     def test_graphql_can_create_territory(self):
         query = '''
