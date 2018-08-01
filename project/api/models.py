@@ -12,7 +12,8 @@ class Nation(models.Model):
                             help_text="Canonical name, should not include any epithets, must be unique",
                             unique=True)
     color = ColorField(default="#FF0000",
-                       help_text="Color to display on map")
+                       help_text="Color to display on map",
+                       unique=True)
     history = HistoricalRecords()
 
     #Flavor fields
@@ -20,8 +21,8 @@ class Nation(models.Model):
                                blank=True)
     description = models.TextField(help_text="Flavor text, brief history, etc.",
                                    blank=True)
-    wikipedia = models.URLField(blank=True,
-                                help_text="Link to the Wikipedia article for this nation")
+    wikipedia = models.URLField(help_text="Link to the Wikipedia article for this nation",
+                                blank=True)
 
     def __str__(self):
         return self.name

@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.gis',
     'django.contrib.staticfiles',
-    'graphene_django',
+    'rest_framework',
     'simple_history',
     'colorfield',
     'api'
@@ -129,7 +129,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Graphene
-GRAPHENE = {
-    'SCHEMA': 'interactivemap.schema.schema' # Where your Graphene schema lives
+# REST
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
 }

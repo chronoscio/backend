@@ -1,8 +1,10 @@
 from django.urls import path
-from graphene_django.views import GraphQLView
 
 from interactivemap import settings
 
+from . import views
+
 urlpatterns = [
-    path('', GraphQLView.as_view(graphiql=settings.DEBUG), name='graphql'),
+    path('nations/', views.nation_list),
+    path('nations/<int:pk>/', views.nation_detail),
 ]
