@@ -1,10 +1,12 @@
-from django.urls import path
-
-from interactivemap import settings
+from django.urls import path, include
+from rest_framework.router import DefaultRouter
 
 from . import views
 
+ROUTER = DefaultRouter()
+ROUTER.register(r'nations', views.NationViewSet)
+ROUTER.register(r'territories', views.TerritoryViewSet)
+
 urlpatterns = [
-    path('nations/', views.nation_list),
-    path('nations/<int:pk>/', views.nation_detail),
+    path('', include(ROUTER.urls))
 ]

@@ -8,7 +8,7 @@ class Nation(models.Model):
     """
     Cultural/governmental entity. Serves as foreign key for most Territories
     """
-    name = models.SlugField(max_length=20,
+    name = models.CharField(max_length=20,
                             help_text="Canonical name, should not include any epithets, must be unique",
                             unique=True)
     color = ColorField(default="#FF0000",
@@ -24,6 +24,13 @@ class Nation(models.Model):
     wikipedia = models.URLField(help_text="Link to the Wikipedia article for this nation",
                                 blank=True)
 
+    #History fields
+
+    # Foreign key to auth.User which will be updated every time the model is changed,
+    # and is this stored in history as the user to update a specific revision
+    # Consider other metadata such as DateTime for the revision (may be handled by django-simple-history)
+    # TODO: implement this
+
     def __str__(self):
         return self.name
 
@@ -31,9 +38,13 @@ class Territory(models.Model):
     """
     Defines the borders and controlled territories associated with a Nation.
     """
+    class Meta:
+        verbose_name_plural = "territories"
+
     start_date = models.DateField(help_text="When this border takes effect")
     end_date = models.DateField(help_text="When this border ceases to exist")
     geo = models.MultiPolygonField()
+
     nation = models.ForeignKey(Nation,
                                related_name="territories",
                                on_delete=models.CASCADE)
