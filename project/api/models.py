@@ -13,6 +13,10 @@ class Nation(models.Model):
         return self.name
 
 class Territory(models.Model):
+
+    class Meta:
+        verbose_name_plural = "territories"
+
     start_date = models.DateField()
     end_date = models.DateField()
     geo = models.GeometryField()

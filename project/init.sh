@@ -17,5 +17,6 @@ python wait_for_pg.py $dbname $host $port $user $passwd
 
 python manage.py makemigrations
 python manage.py migrate
+python manage.py collectstatic --noinput
 
 exec $cmd
