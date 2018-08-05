@@ -1,6 +1,6 @@
 FROM python:3.6-alpine
 
-LABEL maintainer="lpoflynn@protonmail.ch"
+LABEL maintainer="whirish <lpoflynn@protonmail.ch>"
 
 ENV PYTHONUNBUFFERED 1
 
