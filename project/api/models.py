@@ -44,7 +44,7 @@ class Territory(models.Model):
     start_date = models.DateField(help_text="When this border takes effect")
     end_date = models.DateField(help_text="When this border ceases to exist")
     geo = models.MultiPolygonField()
-
+    
     nation = models.ForeignKey(Nation,
                                related_name="territories",
                                on_delete=models.CASCADE)

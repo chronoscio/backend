@@ -1,4 +1,7 @@
 FROM python:3.6-alpine
+
+LABEL maintainer="whirish <lpoflynn@protonmail.ch>"
+
 ENV PYTHONUNBUFFERED 1
 
 RUN sed -i -e 's/v3\.7/edge/g' /etc/apk/repositories && \
