@@ -3,7 +3,7 @@ from rest_framework import viewsets, permissions
 
 from .models import Nation, Territory
 from .serializers import NationSerializer, TerritorySerializer, UserSerializer
-from .permissions import IsStaffOrTargetUser
+from .permissions import IsStaffOrSpecificUser
 
 class NationViewSet(viewsets.ModelViewSet):
     """
@@ -35,4 +35,4 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         # allow non-authenticated user to create via POST
         return (permissions.AllowAny() if self.request.method == 'POST'
-                else IsStaffOrTargetUser()),
+                else IsStaffOrSpecificUser()),

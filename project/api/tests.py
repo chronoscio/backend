@@ -176,16 +176,6 @@ class APITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["nation"], 1)
 
-    def test_api_can_not_query_user_nonadmin(self):
-        """
-        Ensure users cannot access other user's data
-        """
-        url = reverse("user-detail", args=[2])
-        token = Token.objects.get(user__username="test_user")
-        self.client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
-        response = self.client.get(url, format="json")
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
     def test_api_can_query_own_user(self):
         """
         Ensure users can access their data
