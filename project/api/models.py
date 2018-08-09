@@ -1,5 +1,8 @@
+from json import loads
+
 from django.core.exceptions import ValidationError
 from django.contrib.gis.db import models
+from django.contrib.postgres.fields import ArrayField
 from simple_history.models import HistoricalRecords
 from colorfield.fields import ColorField
 
@@ -8,7 +11,7 @@ class Nation(models.Model):
     """
     Cultural/governmental entity. Serves as foreign key for most Territories
     """
-    name = models.CharField(max_length=20,
+    name = models.TextField(max_length=100,
                             help_text="Canonical name, should not include any epithets, must be unique",
                             unique=True)
     color = ColorField(default="#FF0000",
@@ -17,8 +20,11 @@ class Nation(models.Model):
     history = HistoricalRecords()
 
     #Flavor fields
-    aliases = models.TextField(help_text="CSV of alternative names this state may be known by",
-                               blank=True)
+    aliases = ArrayField(
+        models.TextField(max_length=100),
+        help_text="Alternative names this state may be known by",
+        blank=True
+    )
     description = models.TextField(help_text="Flavor text, brief history, etc.",
                                    blank=True)
     wikipedia = models.URLField(help_text="Link to the Wikipedia article for this nation",
@@ -43,16 +49,28 @@ class Territory(models.Model):
 
     start_date = models.DateField(help_text="When this border takes effect")
     end_date = models.DateField(help_text="When this border ceases to exist")
-    geo = models.MultiPolygonField()
-    
+    geo = models.GeometryField()
+
     nation = models.ForeignKey(Nation,
                                related_name="territories",
                                on_delete=models.CASCADE)
+    CONTROL_TYPE_CHOICES = (
+        ("CC", "Complete Control"),
+        ("DT", "Disputed Territory"),
+        # TODO: Add more types later, drawing a blank atm
+    )
+    control_type = models.TextField(
+        max_length=2,
+        choices=CONTROL_TYPE_CHOICES,
+        default="CC",
+    )
     history = HistoricalRecords()
 
     def clean(self, *args, **kwargs):
         if self.start_date > self.end_date:
             raise ValidationError("Start date cannot be later than end date")
+        if loads(self.geo.json)["type"] != "Polygon" and loads(self.geo.json)["type"] != "MultiPolygon":
+            raise ValidationError("Only Polygon and MultiPolygon objects are acceptable geometry types")
         super(Territory, self).clean(*args, **kwargs)
 
     def save(self, *args, **kwargs):
