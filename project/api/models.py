@@ -1,5 +1,4 @@
 from json import loads
-
 from django.core.exceptions import ValidationError
 from django.contrib.gis.db import models
 from django.contrib.postgres.fields import ArrayField
@@ -23,6 +22,7 @@ class Nation(models.Model):
     aliases = ArrayField(
         models.TextField(max_length=100),
         help_text="Alternative names this state may be known by",
+        null=True,
         blank=True
     )
     description = models.TextField(help_text="Flavor text, brief history, etc.",
