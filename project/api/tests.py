@@ -75,6 +75,38 @@ class APITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(User.objects.count(), 3)
         self.assertEqual(User.objects.get(pk=3).email, "created_test_user@example.com")
+    def test_api_can_update_territory(self):
+        """
+        Ensure we can query individual territories
+        """
+        url = reverse("territory-detail", args=[1])
+        data = {
+            "start_date": "2010-07-20",
+            "end_date": "2018-07-20",
+            "nation": 1,
+            "geo": "{\"type\": \"MultiPolygon\",\"coordinates\": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}"
+        }
+        token = Token.objects.get(user__username="test_user")
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
+        response = self.client.put(url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["nation"], 1)
+
+    def test_api_can_update_nation(self):
+        """
+        Ensure we can query individual nations
+        """
+        url = reverse("nation-detail", args=[1])
+        data = {
+            "name": "Created Test Nation",
+            "color": "#ccffff",
+            "wikipedia": "https://en.wikipedia.org/wiki/Test"
+        }
+        token = Token.objects.get(user__username="test_user")
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
+        response = self.client.put(url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["name"], "Created Test Nation")
 
     def test_api_can_query_nations(self):
         """
