@@ -1,8 +1,12 @@
-from django.urls import path
-from graphene_django.views import GraphQLView
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
-from interactivemap import settings
+from . import views
+
+ROUTER = DefaultRouter()
+ROUTER.register(r'nations', views.NationViewSet)
+ROUTER.register(r'territories', views.TerritoryViewSet)
 
 urlpatterns = [
-    path('', GraphQLView.as_view(graphiql=settings.DEBUG), name='graphql'),
+    path('', include(ROUTER.urls))
 ]
