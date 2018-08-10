@@ -16,6 +16,7 @@ class APITest(APITestCase):
         Create basic model instances and test user
         """
         new_nation = Nation.objects.create(name="Test Nation",
+                                           url_id="test_nation",
                                            color="fff",
                                            wikipedia="https://en.wikipedia.org/wiki/Test")
         Territory.objects.create(start_date="1444-11-11",
@@ -31,10 +32,11 @@ class APITest(APITestCase):
         """
         url = reverse("nation-list")
         data = {
-                    "name": "Created Test Nation",
-                    "color": "#ccffff",
-                    "wikipedia": "https://en.wikipedia.org/wiki/Test"
-               }
+            "name": "Created Test Nation",
+            "url_id": "created_test_nation",
+            "color": "#ccffff",
+            "wikipedia": "https://en.wikipedia.org/wiki/Test"
+        }
         token = Token.objects.get(user__username="test_user")
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
         response = self.client.post(url, data, format="json")
@@ -48,11 +50,11 @@ class APITest(APITestCase):
         """
         url = reverse("territory-list")
         data = {
-                    "start_date": "2010-07-20",
-                    "end_date": "2018-07-20",
-                    "nation": 1,
-                    "geo": "{\"type\": \"MultiPolygon\",\"coordinates\": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}"
-               }
+            "start_date": "2010-07-20",
+            "end_date": "2018-07-20",
+            "nation": 1,
+            "geo": "{\"type\": \"MultiPolygon\",\"coordinates\": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}"
+        }
         token = Token.objects.get(user__username="test_user")
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
         response = self.client.post(url, data, format="json")
@@ -67,10 +69,10 @@ class APITest(APITestCase):
         """
         url = reverse("user-list")
         data = {
-                    "username": "created_test_user",
-                    "email": "created_test_user@example.com",
-                    "password": "test_password",
-               }
+            "username": "created_test_user",
+            "email": "created_test_user@example.com",
+            "password": "test_password",
+        }
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(User.objects.count(), 3)
@@ -96,9 +98,10 @@ class APITest(APITestCase):
         """
         Ensure we can query individual nations
         """
-        url = reverse("nation-detail", args=[1])
+        url = reverse("nation-detail", args=["test_nation"])
         data = {
             "name": "Created Test Nation",
+            "url_id": "created_test_nation",
             "color": "#ccffff",
             "wikipedia": "https://en.wikipedia.org/wiki/Test"
         }
@@ -162,7 +165,7 @@ class APITest(APITestCase):
         """
         Ensure we can query individual nations
         """
-        url = reverse("nation-detail", args=[1])
+        url = reverse("nation-detail", args=["test_nation"])
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["name"], "Test Nation")
@@ -193,9 +196,9 @@ class APITest(APITestCase):
         """
         url = "/api-token-auth/"
         data = {
-                    "username": "test_user",
-                    "password": "test_password",
-               }
+            "username": "test_user",
+            "password": "test_password",
+        }
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["token"], Token.objects.get(user__username="test_user").key)
