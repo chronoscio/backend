@@ -12,6 +12,7 @@ class NationViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     queryset = Nation.objects.all()
     serializer_class = NationSerializer
+    lookup_field = "url_id"
 
     # TODO use request.user to update revision table
 

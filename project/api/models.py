@@ -19,6 +19,10 @@ class Nation(models.Model):
     name = models.TextField(max_length=100,
                             help_text="Canonical name, should not include any epithets, must be unique",
                             unique=True)
+    url_id = models.SlugField(max_length=75,
+                              help_text="Identifier used to lookup nations in the URL, "
+                                        "should be kept short and must be unique",
+                              unique=True)
     color = ColorField(default="#FF0000",
                        help_text="Color to display on map",
                        unique=True)

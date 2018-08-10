@@ -11,6 +11,7 @@ class NationSerializer(ModelSerializer):
         model = Nation
         fields = ("id",
                   "name",
+                  "url_id",
                   "color",
                   "aliases",
                   "description",
@@ -25,7 +26,8 @@ class TerritorySerializer(ModelSerializer):
         fields = ("start_date",
                   "end_date",
                   "geo",
-                  "nation")
+                  "nation",
+                  "control_type")
 
 class UserSerializer(ModelSerializer):
     """
