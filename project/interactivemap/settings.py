@@ -147,5 +147,5 @@ REST_FRAMEWORK = {
 
 CORS_ORIGIN_WHITELIST = (
     'localhost:3000',
-    'frontend-*.now.sh',
+    'interactivemap-frontend-*.now.sh',
 )
