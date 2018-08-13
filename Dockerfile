@@ -8,8 +8,8 @@ RUN sed -i -e 's/v3\.7/edge/g' /etc/apk/repositories && \
     apk upgrade --update-cache --available
 
 RUN apk update && \
-    apk add --virtual build-deps gcc python-dev musl-dev && \
-    apk add postgresql-dev bash && \
+    apk add --virtual build-deps gcc python3-dev musl-dev libffi-dev && \
+    apk add postgresql-dev && \
     apk add --no-cache --virtual .build-deps-testing \
         --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
         gdal-dev \
