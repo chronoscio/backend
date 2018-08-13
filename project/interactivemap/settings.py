@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 import json
+import re
 from six.moves.urllib import request
 
 from cryptography.x509 import load_pem_x509_certificate
@@ -169,7 +170,10 @@ JWT_ISSUER = None
 if AUTH0_DOMAIN:
     jsonurl = request.urlopen('https://' + AUTH0_DOMAIN + '/.well-known/jwks.json')
     jwks = json.loads(jsonurl.read())
-    cert = '-----BEGIN CERTIFICATE-----\n' + jwks['keys'][0]['x5c'][0] + '\n-----END CERTIFICATE-----'
+    # Add a line-break every 64 chars
+    # https://stackoverflow.com/questions/2657693/insert-a-newline-character-every-64-characters-using-python
+    body = re.sub("(.{64})", "\\1\n", jwks['keys'][0]['x5c'][0], 0, re.DOTALL)
+    cert = '-----BEGIN CERTIFICATE-----\n' + body + '\n-----END CERTIFICATE-----'
     certificate = load_pem_x509_certificate(cert.encode('utf-8'), default_backend())
     PUBLIC_KEY = certificate.public_key()
     JWT_ISSUER = 'https://' + AUTH0_DOMAIN + '/'
