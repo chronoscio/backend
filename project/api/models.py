@@ -38,6 +38,16 @@ class Nation(models.Model):
                                    blank=True)
     wikipedia = models.URLField(help_text="Link to the Wikipedia article for this nation",
                                 blank=True)
+    CONTROL_TYPE_CHOICES = (
+        ("CC", "Complete Control"),
+        ("DT", "Disputed Territory"),
+        # TODO: Add more types later, drawing a blank atm
+    )
+    control_type = models.TextField(
+        max_length=2,
+        choices=CONTROL_TYPE_CHOICES,
+        default="CC",
+    )
 
     #History fields
 
@@ -63,16 +73,6 @@ class Territory(models.Model):
     nation = models.ForeignKey(Nation,
                                related_name="territories",
                                on_delete=models.CASCADE)
-    CONTROL_TYPE_CHOICES = (
-        ("CC", "Complete Control"),
-        ("DT", "Disputed Territory"),
-        # TODO: Add more types later, drawing a blank atm
-    )
-    control_type = models.TextField(
-        max_length=2,
-        choices=CONTROL_TYPE_CHOICES,
-        default="CC",
-    )
     history = HistoricalRecords()
 
     def clean(self, *args, **kwargs):
