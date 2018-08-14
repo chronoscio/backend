@@ -9,5 +9,9 @@ ROUTER.register(r'territories', views.TerritoryViewSet)
 ROUTER.register(r'accounts', views.UserViewSet)
 
 urlpatterns = [
-    path('', include(ROUTER.urls))
+    path('', include(ROUTER.urls)),
+    #TODO delet
+    path('public', views.public),
+    path('private', views.private),
+    path('private-scoped', views.private_scoped),
 ]
