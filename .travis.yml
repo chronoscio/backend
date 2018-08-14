@@ -9,7 +9,9 @@ services:
   - docker
 
 install:
-  - mv django.env.sample django.env
+  - sed '/AUTH0_DOMAIN/d' ./django.env.sample > ./django.env
+  - sed '/API_IDENTIFIER/d' ./django.env > ./django.env
+  - sed '/TEST_ACCESS_TOKEN/d' ./django.env > ./django.env
   - mv postgres.env.sample postgres.env
   - docker-compose pull
   - docker-compose build
