@@ -15,7 +15,8 @@ class NationSerializer(ModelSerializer):
                   "color",
                   "aliases",
                   "description",
-                  "wikipedia")
+                  "wikipedia",
+                  "control_type")
 
 class TerritorySerializer(ModelSerializer):
     """
@@ -26,8 +27,7 @@ class TerritorySerializer(ModelSerializer):
         fields = ("start_date",
                   "end_date",
                   "geo",
-                  "nation",
-                  "control_type")
+                  "nation")
 
 class UserSerializer(ModelSerializer):
     """
