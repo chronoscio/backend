@@ -23,8 +23,7 @@ class Nation(models.Model):
                               help_text="Identifier used to lookup nations in the URL, "
                                         "should be kept short and must be unique",
                               unique=True)
-    color = ColorField(default="#FF0000",
-                       help_text="Color to display on map",
+    color = ColorField(help_text="Color to display on map",
                        unique=True)
     history = HistoricalRecords()
 

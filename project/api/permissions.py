@@ -28,7 +28,8 @@ class IsStaffOrSpecificUser(permissions.BasePermission):
         return True
 
 def get_token_auth_header(request):
-    """Obtains the Access Token from the Authorization Header
+    """
+    Obtains the Access Token from the Authorization Header
     """
     auth = request.META.get("HTTP_AUTHORIZATION", None)
     parts = auth.split()
@@ -37,7 +38,8 @@ def get_token_auth_header(request):
     return token
 
 def requires_scope(required_scope):
-    """Determines if the required scope is present in the access token
+    """
+    Determines if the required scope is present in the access token
     Args:
         required_scope (str): The scope required to access the resource
     """
