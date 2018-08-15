@@ -36,5 +36,8 @@ exec_debug: ## Runs built-in Django web server
 test: ## Builds, starts, and runs containers, running the django tests
 	docker-compose run --service-ports web sh init.sh python manage.py test
 
+exec_test: ## Builds, starts, and runs containers, running the django tests
+	docker-compose exec web python manage.py test
+
 admin: ## Creates a super user in the running `web` container based on the values supplied in the configuration file [NOT WORKING ATM]
 	docker-compose exec web ./manage.py shell -c "from django.contrib.auth.models import User; User.objects.create_superuser('$(ADMIN_USER)', '$(ADMIN_EMAIL)', '$(ADMIN_PASS)')"

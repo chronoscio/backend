@@ -8,5 +8,5 @@ ROUTER.register(r'nations', views.NationViewSet)
 ROUTER.register(r'territories', views.TerritoryViewSet)
 
 urlpatterns = [
-    path('', include(ROUTER.urls))
+    path('', include(ROUTER.urls)),
 ]

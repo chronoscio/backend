@@ -12,5 +12,6 @@ mv postgres.env.sample postgres.env
 # Build and start the docker containers
 make run
 
-# Navigate to http://localhost/, if you get a 502 error postgres likely has not been initialized yet, try again in a few seconds
+# Navigate to http://localhost/, if you get a 502 error postgres likely has not been initialized yet,
+#   try again in a few seconds
 ```

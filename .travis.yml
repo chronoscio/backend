@@ -9,13 +9,15 @@ services:
   - docker
 
 install:
-  - mv django.env.sample django.env
+  - sed '/AUTH0_DOMAIN/d' ./django.env.sample > ./django.env
+  - sed -i '/API_IDENTIFIER/d' ./django.env
+  - sed -i '/TEST_ACCESS_TOKEN/d' ./django.env
   - mv postgres.env.sample postgres.env
   - docker-compose pull
   - docker-compose build
 
 script:
-  - docker-compose run -e CODACY_PROJECT_TOKEN=$CODACY_PROJECT_TOKEN --service-ports web sh init.sh python -m coverage run --source=api manage.py test
+  - docker-compose run -e CODACY_PROJECT_TOKEN -e AUTH0_DOMAIN -e API_IDENTIFIER -e TEST_ACCESS_TOKEN --service-ports web sh init.sh python -m coverage run --source=api manage.py test
 
 after_success:
   - python-codacy-coverage -r coverage.xml

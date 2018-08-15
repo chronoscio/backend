@@ -1,10 +1,12 @@
 from django.urls import reverse
-from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 from django.contrib.gis.geos import GEOSGeometry
 from rest_framework import status
+from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
+from os import environ
 
-from .models import *
+from .models import Nation, Territory
 
 # Create your tests here.
 class APITest(APITestCase):
@@ -12,16 +14,16 @@ class APITest(APITestCase):
     @classmethod
     def setUpTestData(self):
         """
-        Create basic model instances
+        Create basic model instances and test user
         """
         new_nation = Nation.objects.create(name="Test Nation",
+                                           url_id="test_nation",
                                            color="fff",
                                            wikipedia="https://en.wikipedia.org/wiki/Test")
         Territory.objects.create(start_date="1444-11-11",
                                  end_date="2018-01-01",
                                  nation=new_nation,
                                  geo=GEOSGeometry('{"type": "MultiPolygon","coordinates": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}'))
-        User.objects.create_user("test_user", "test_email@example.com", "test_password")
 
     def test_api_can_create_nation(self):
         """
@@ -30,10 +32,11 @@ class APITest(APITestCase):
         url = reverse("nation-list")
         data = {
             "name": "Created Test Nation",
+            "url_id": "created_test_nation",
             "color": "#ccffff",
             "wikipedia": "https://en.wikipedia.org/wiki/Test"
         }
-        self.client.login(username="test_user", password="test_password")
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + environ['TEST_ACCESS_TOKEN'])
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Nation.objects.count(), 2)
@@ -50,7 +53,7 @@ class APITest(APITestCase):
             "nation": 1,
             "geo": "{\"type\": \"MultiPolygon\",\"coordinates\": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}"
         }
-        self.client.login(username="test_user", password="test_password")
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + environ['TEST_ACCESS_TOKEN'])
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Territory.objects.count(), 2)
@@ -67,7 +70,7 @@ class APITest(APITestCase):
             "nation": 1,
             "geo": "{\"type\": \"MultiPolygon\",\"coordinates\": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}"
         }
-        self.client.login(username="test_user", password="test_password")
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + environ['TEST_ACCESS_TOKEN'])
         response = self.client.put(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["nation"], 1)
@@ -76,13 +79,14 @@ class APITest(APITestCase):
         """
         Ensure we can query individual nations
         """
-        url = reverse("nation-detail", args=[1])
+        url = reverse("nation-detail", args=["test_nation"])
         data = {
             "name": "Created Test Nation",
+            "url_id": "created_test_nation",
             "color": "#ccffff",
             "wikipedia": "https://en.wikipedia.org/wiki/Test"
         }
-        self.client.login(username="test_user", password="test_password")
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + environ['TEST_ACCESS_TOKEN'])
         response = self.client.put(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["name"], "Created Test Nation")
@@ -109,7 +113,7 @@ class APITest(APITestCase):
         """
         Ensure we can query individual nations
         """
-        url = reverse("nation-detail", args=[1])
+        url = reverse("nation-detail", args=["test_nation"])
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["name"], "Test Nation")
