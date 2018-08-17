@@ -15,3 +15,6 @@ make run
 # Navigate to http://localhost/, if you get a 502 error postgres likely has not been initialized yet,
 #   try again in a few seconds
 ```
+
+## Contributing
+Please refer to the [developer guide](./DEVELOPER.md) and [contribution guide](./CONTRIBUTING.md) to learn how the backend is structured.
