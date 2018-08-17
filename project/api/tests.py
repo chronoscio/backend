@@ -25,15 +25,13 @@ def memoize(function):
     return wrapper
 
 @memoize
-def getUserToken(userName=environ['TEST_USERNAME'], password=environ['TEST_PASSWORD']):
+def getUserToken(client_id=environ['AUTH0_CLIENT_ID'], client_secret=environ['AUTH0_CLIENT_SECRET']):
     url = 'https://' + environ['AUTH0_DOMAIN'] + '/oauth/token'
     headers = {'content-type': 'application/json'}
-    parameter = {"client_id": environ['AUTH0_CLIENT_ID'],
-                 "client_secret": environ['AUTH0_CLIENT_SECRET'],
+    parameter = {"client_id": client_id,
+                 "client_secret": client_secret,
                  "audience": 'https://chronoscio.org/api/',
-                 "grant_type": "client_credentials",
-                 "username": userName,
-                 "password": password}
+                 "grant_type": "client_credentials"}
     response = json.loads(requests.post(
         url, json=parameter, headers=headers).text)
     return response['access_token']
