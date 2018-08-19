@@ -34,6 +34,7 @@ def getUserToken(client_id=environ['AUTH0_CLIENT_ID'], client_secret=environ['AU
                  "grant_type": "client_credentials"}
     response = json.loads(requests.post(
         url, json=parameter, headers=headers).text)
+    print('run1')
     print(response)
     return response['access_token']
 
@@ -64,6 +65,8 @@ class APITest(APITestCase):
             "color": "#ccffff",
             "wikipedia": "https://en.wikipedia.org/wiki/Test"
         }
+        print('run2')
+        print(getUserToken())
         self.client.credentials(
             HTTP_AUTHORIZATION="Bearer " +getUserToken())
         response = self.client.post(url, data, format="json")
