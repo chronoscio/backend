@@ -19,7 +19,7 @@ install:
   - docker-compose build
 
 script:
-  - docker-compose run -e CODACY_PROJECT_TOKEN -e AUTH0_CLIENT_SECRET -e AUTH0_CLIENT_ID -e API_IDENTIFIER -e TEST_USERNAME -e TEST_PASSWORD --service-ports web sh init.sh python -m coverage run --source=api manage.py test
+  - docker-compose run -e CODACY_PROJECT_TOKEN -e AUTH0_CLIENT_SECRET -e AUTH0_CLIENT_ID --service-ports web sh init.sh python -m coverage run --source=api manage.py test
 
 after_success:
   - python-codacy-coverage -r coverage.xml
