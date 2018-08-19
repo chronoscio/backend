@@ -33,6 +33,7 @@ def getUserToken(client_id=environ['AUTH0_CLIENT_ID'], client_secret=environ['AU
                  "client_secret": client_secret,
                  "audience": environ['API_IDENTIFIER'],
                  "grant_type": "client_credentials"}
+    print('run3')
     response = json.loads(requests.post(
         url, json=parameter, headers=headers).text)
     print('run1')
