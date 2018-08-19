@@ -4,8 +4,6 @@ from django.core.exceptions import ValidationError
 from django.contrib.gis.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.core.exceptions import ValidationError
-from django.contrib.gis.db import models
 from django.contrib.postgres.fields import ArrayField
 from simple_history.models import HistoricalRecords
 from colorfield.fields import ColorField

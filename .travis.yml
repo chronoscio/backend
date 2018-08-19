@@ -9,15 +9,16 @@ services:
   - docker
 
 install:
-  - sed '/AUTH0_DOMAIN/d' ./django.env.sample > ./django.env
-  - sed -i '/API_IDENTIFIER/d' ./django.env
-  - sed -i '/TEST_ACCESS_TOKEN/d' ./django.env
+  - sed '/CLIENT/d' ./django.env.sample > ./django.env
+  - sed -i '/TEST/d' ./django.env
+  - sed -i 's/{DOMAIN}/chronoscio.auth0.com/g' ./django.env
+  - sed -i 's#{IDENTIFIER}#https://chronoscio.org/api/#g' ./django.env
   - mv postgres.env.sample postgres.env
   - docker-compose pull
   - docker-compose build
 
 script:
-  - docker-compose run -e CODACY_PROJECT_TOKEN -e AUTH0_DOMAIN -e API_IDENTIFIER -e TEST_ACCESS_TOKEN --service-ports web sh init.sh python -m coverage run --source=api manage.py test
+  - docker-compose run -e CODACY_PROJECT_TOKEN -e AUTH0_CLIENT_SECRET -e AUTH0_CLIENT_ID --service-ports web sh init.sh python -m coverage run --source=api manage.py test
 
 after_success:
   - python-codacy-coverage -r coverage.xml
