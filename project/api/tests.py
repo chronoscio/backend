@@ -30,10 +30,11 @@ def getUserToken(client_id=environ['AUTH0_CLIENT_ID'], client_secret=environ['AU
     headers = {'content-type': 'application/json'}
     parameter = {"client_id": client_id,
                  "client_secret": client_secret,
-                 "audience": 'https://chronoscio.org/api/',
+                 "audience": environ['API_IDENTIFIER'],
                  "grant_type": "client_credentials"}
     response = json.loads(requests.post(
         url, json=parameter, headers=headers).text)
+    print(response)
     return response['access_token']
 
 class APITest(APITestCase):
