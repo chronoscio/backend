@@ -26,7 +26,7 @@ def memoize(function):
 
 #@memoize
 def getUserToken(client_id=environ['AUTH0_CLIENT_ID'], client_secret=environ['AUTH0_CLIENT_SECRET']):
-    print('run')
+    print(environ)
     url = 'https://' + environ['AUTH0_DOMAIN'] + '/oauth/token'
     headers = {'content-type': 'application/json'}
     parameter = {"client_id": client_id,
