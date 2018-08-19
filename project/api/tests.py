@@ -24,20 +24,16 @@ def memoize(function):
             return rv
     return wrapper
 
-#@memoize
+@memoize
 def getUserToken(client_id=environ['AUTH0_CLIENT_ID'], client_secret=environ['AUTH0_CLIENT_SECRET']):
-    print(environ)
     url = 'https://' + environ['AUTH0_DOMAIN'] + '/oauth/token'
     headers = {'content-type': 'application/json'}
     parameter = {"client_id": client_id,
                  "client_secret": client_secret,
                  "audience": environ['API_IDENTIFIER'],
                  "grant_type": "client_credentials"}
-    print('run3')
     response = json.loads(requests.post(
         url, json=parameter, headers=headers).text)
-    print('run1')
-    print(response)
     return response['access_token']
 
 class APITest(APITestCase):
@@ -67,8 +63,6 @@ class APITest(APITestCase):
             "color": "#ccffff",
             "wikipedia": "https://en.wikipedia.org/wiki/Test"
         }
-        print('run2')
-        print(getUserToken())
         self.client.credentials(
             HTTP_AUTHORIZATION="Bearer " +getUserToken())
         response = self.client.post(url, data, format="json")

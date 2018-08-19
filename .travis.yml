@@ -13,7 +13,6 @@ install:
   - sed -i '/TEST/d' ./django.env
   - sed -i 's/{DOMAIN}/chronoscio.auth0.com/g' ./django.env
   - sed -i 's#{IDENTIFIER}#https://chronoscio.org/api/#g' ./django.env
-  - cat django.env
   - mv postgres.env.sample postgres.env
   - docker-compose pull
   - docker-compose build
