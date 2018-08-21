@@ -1,5 +1,7 @@
+from ast import literal_eval as make_tuple
 from django.contrib.auth.models import User
-from rest_framework import viewsets, permissions
+from django.contrib.gis.geos import Polygon
+from rest_framework import viewsets, permissions, generics
 
 from .models import Nation, Territory
 from .serializers import NationSerializer, TerritorySerializer, UserSerializer
@@ -20,7 +22,16 @@ class TerritoryViewSet(viewsets.ModelViewSet):
     Viewset for the Territory model
     """
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    queryset = Territory.objects.all()
     serializer_class = TerritorySerializer
+
+    queryset = Territory.objects.all()
+
+    def get_queryset(self):
+        bounds = self.request.query_params.get('bounds', None)
+        if bounds is not None:
+            geom = Polygon(make_tuple(bounds), srid=4326)
+            self.queryset = Territory.objects.filter(geo__within=geom)
+        else:
+            return self.queryset
 
     # TODO use request.user to update revision table
