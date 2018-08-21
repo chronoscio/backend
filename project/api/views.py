@@ -30,7 +30,7 @@ class TerritoryViewSet(viewsets.ModelViewSet):
         bounds = self.request.query_params.get('bounds', None)
         if bounds is not None:
             geom = Polygon(make_tuple(bounds), srid=4326)
-            self.queryset = Territory.objects.filter(geo__bbcontains=geom)
+            self.queryset = Territory.objects.filter(geo__bboverlaps=geom)
         else:
             return self.queryset
 
