@@ -141,6 +141,16 @@ class APITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[0]["nation"], 1)
 
+    def test_api_can_query_territories_bounds(self):
+        """
+        Ensure querying for bounds in which the nation does not
+        lie in fails
+        """
+        url = reverse("territory-list")+"?bounds=((0.0, 0.0), (0.0, 50.0), (50.0, 50.0), (50.0, 0.0), (0.0, 0.0))"
+        response = self.client.get(url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(not response.data)
+
     def test_api_can_query_nation(self):
         """
         Ensure we can query individual nations
