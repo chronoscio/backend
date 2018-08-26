@@ -31,8 +31,7 @@ class TerritoryViewSet(viewsets.ModelViewSet):
         if bounds is not None:
             geom = Polygon(make_tuple(bounds), srid=4326)
             self.queryset = Territory.objects.filter(geo__intersects=geom)
-            return self.queryset
-        else:
-            return self.queryset
+
+        return self.queryset
 
     # TODO use request.user to update revision table
