@@ -1,13 +1,10 @@
 from json import loads
-from django.conf import settings
+
 from django.core.exceptions import ValidationError
 from django.contrib.gis.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.contrib.postgres.fields import ArrayField
 from simple_history.models import HistoricalRecords
 from colorfield.fields import ColorField
-from rest_framework.authtoken.models import Token
 
 # Create your models here.
 class Nation(models.Model):
@@ -98,11 +95,3 @@ class DiplomaticRelation(models.Model):
         or something similar?
     """
     pass
-
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_auth_token(sender, instance=None, created=False, **kwargs):
-    """
-    Automatically creates a token when a user is registered
-    """
-    if created:
-        Token.objects.create(user=instance)
