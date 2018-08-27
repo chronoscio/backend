@@ -9,4 +9,5 @@ ROUTER.register(r'territories', views.TerritoryViewSet)
 
 urlpatterns = [
     path('', include(ROUTER.urls)),
+    path('upload/<filename>/', views.ShpUploadView.as_view(), name='upload')
 ]

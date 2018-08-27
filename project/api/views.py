@@ -1,7 +1,11 @@
+import os
+
 from ast import literal_eval as make_tuple
 from django.contrib.auth.models import User
 from django.contrib.gis.geos import Polygon
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, views, status
+from rest_framework.parsers import FileUploadParser
+from rest_framework.response import Response
 
 from .models import Nation, Territory
 from .serializers import NationSerializer, TerritorySerializer, UserSerializer
@@ -35,3 +39,22 @@ class TerritoryViewSet(viewsets.ModelViewSet):
         return self.queryset
 
     # TODO use request.user to update revision table
+
+class ShpUploadView(views.APIView):
+    parser_classes = (FileUploadParser,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def post(self, request, filename, format=None):
+        if 'file' not in request.data:
+            raise ParseError("Empty content")
+
+        file_obj = request.data['file']
+        if not os.path.isdir('shp/'):
+            os.makedirs('shp/')
+
+        # TODO secure, check mime/ext and limit size in nginx
+        with open('shp/'+filename, 'wb+') as destination:
+            for chunk in file_obj.chunks():
+                destination.write(chunk)
+
+        return Response(status=status.HTTP_201_CREATED)

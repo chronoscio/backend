@@ -140,3 +140,6 @@ venv.bak/
 # Project Enviornment Files
 django.env
 postgres.env
+
+# Shapefile upload dir
+project/shp/
