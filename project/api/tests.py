@@ -161,6 +161,26 @@ class APITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(not response.data)
 
+    def test_api_can_query_territories_date(self):
+        """
+        Ensure we can query for territories within a bounded
+        region
+        """
+        url = reverse("territory-list")+"?date=2011-01-1"
+        response = self.client.get(url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]["nation"], 1)
+
+    def test_api_can_not_query_territories_date(self):
+        """
+        Ensure querying for bounds in which the nation does not
+        lie in fails
+        """
+        url = reverse("territory-list")+"?date=2020-01-01"
+        response = self.client.get(url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(not response.data)
+
     def test_api_can_query_nation(self):
         """
         Ensure we can query individual nations
