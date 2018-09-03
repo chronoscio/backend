@@ -35,7 +35,7 @@ class TerritorySerializer(ModelSerializer):
             if field != 'geo' and field != 'nation':
                 ret[field] = val
 
-        # Convert geo field to MultiPolygon if it is a feature collection
+        # Convert geo field to MultiPolygon if it is a FeatureCollection
         geojson = loads(data['geo'])
         if geojson['type'] == 'FeatureCollection':
             features = geojson['features']
@@ -47,6 +47,8 @@ class TerritorySerializer(ModelSerializer):
                     features_union = features_union.union(GEOSGeometry(dumps(feature['geometry'])))
 
             ret['geo'] = features_union
+        else:
+            ret['geo'] = data['geo']
 
         return ret
 
