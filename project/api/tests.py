@@ -2,10 +2,8 @@ import json
 import requests
 
 from django.urls import reverse
-from django.contrib.auth import authenticate
 from django.contrib.gis.geos import GEOSGeometry
 from rest_framework import status
-from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
 from os import environ
 
