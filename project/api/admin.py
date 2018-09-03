@@ -5,3 +5,4 @@ from .models import *
 # Register your models here.
 admin.site.register(Territory, SimpleHistoryAdmin)
 admin.site.register(Nation, SimpleHistoryAdmin)
+admin.site.register(DiplomaticRelation, SimpleHistoryAdmin)
