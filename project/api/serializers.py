@@ -28,19 +28,3 @@ class TerritorySerializer(ModelSerializer):
                   "end_date",
                   "geo",
                   "nation")
-
-class UserSerializer(ModelSerializer):
-    """
-    Serializes the User model, password cannot be read
-    """
-    class Meta:
-        model = User
-        fields = ("username", "email", "password")
-        read_only_fields = ('is_staff', 'is_superuser', 'is_active', 'date_joined',)
-        extra_kwargs = {
-            "password": {"write_only": True}
-        }
-
-    def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        return user
