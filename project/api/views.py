@@ -1,5 +1,4 @@
 from ast import literal_eval as make_tuple
-from django.contrib.auth.models import User
 from django.contrib.gis.geos import Polygon
 from rest_framework import viewsets, permissions
 
