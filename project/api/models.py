@@ -19,21 +19,21 @@ class Nation(models.Model):
                                         "should be kept short and must be unique",
                               unique=True)
     color = ColorField(help_text="Color to display on map",
-                       unique=True)
+                       unique=True,
+                       null=True,
+                       blank=True)
     history = HistoricalRecords()
 
     #Flavor fields
     aliases = ArrayField(
         models.TextField(max_length=100),
         help_text="Alternative names this state may be known by",
-        null=True,
-        blank=True
+        blank=True,
     )
     description = models.TextField(help_text="Flavor text, brief history, etc.",
                                    blank=True)
     links = ArrayField(
         models.URLField(),
-        null=True,
         blank=True,
     )
     references = ArrayField(
@@ -109,6 +109,7 @@ class DiplomaticRelation(models.Model):
         ("M", "Condominium"),
         ("T", "Trade League"),
         ("W", "At War"),
+        ('P', 'State or Province'),
         ("CP", "Client State - Puppet State"),
         ("CV", "Client State - Vassal State"),
         ("CPU", "Client State - Personal Union"),
@@ -119,7 +120,6 @@ class DiplomaticRelation(models.Model):
     diplo_type = models.TextField(
         max_length=3,
         choices=DIPLO_TYPE_CHOICES,
-        default="CC",
     )
     references = ArrayField(
         models.TextField(max_length=150),
