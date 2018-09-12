@@ -12,14 +12,7 @@ class NationSerializer(ModelSerializer):
     """
     class Meta:
         model = Nation
-        fields = ("id",
-                  "name",
-                  "url_id",
-                  "color",
-                  "aliases",
-                  "description",
-                  "wikipedia",
-                  "control_type")
+        fields = '__all__'
 
 class TerritorySerializer(ModelSerializer):
     """
@@ -54,7 +47,4 @@ class TerritorySerializer(ModelSerializer):
 
     class Meta:
         model = Territory
-        fields = ("start_date",
-                  "end_date",
-                  "geo",
-                  "nation")
+        fields = '__all__'

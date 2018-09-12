@@ -24,7 +24,14 @@ class Nation(models.Model):
                        blank=True)
     history = HistoricalRecords()
 
-    #Flavor fields
+    ## Flavor fields
+
+    # required fields
+    references = ArrayField(
+        models.TextField(max_length=150),
+    )
+
+    # optional fields
     aliases = ArrayField(
         models.TextField(max_length=100),
         help_text="Alternative names this state may be known by",
@@ -36,13 +43,10 @@ class Nation(models.Model):
         models.URLField(),
         blank=True,
     )
-    references = ArrayField(
-        models.TextField(max_length=150),
-    )
     CONTROL_TYPE_CHOICES = (
         ("CC", "Complete Control"),
         ("DT", "Disputed Territory"),
-        # TODO: Add more types later, drawing a blank atm
+        # TODO: Add more types later
     )
     control_type = models.TextField(
         max_length=2,
@@ -101,8 +105,8 @@ class DiplomaticRelation(models.Model):
     """
     start_date = models.DateField(help_text="When this relation takes effect")
     end_date = models.DateField(help_text="When this relation ceases to exist")
-    first_party = models.ManyToManyField(Nation, related_name='first_parties')
-    second_party = models.ManyToManyField(Nation, related_name='second_parties')
+    parent_party = models.ManyToManyField(Nation, related_name='parent_parties')
+    child_party = models.ManyToManyField(Nation, related_name='child_parties')
     DIPLO_TYPE_CHOICES = (
         ("A", "Military Alliance"),
         ("D", "Dual Monarchy"),
