@@ -27,7 +27,7 @@ def getUserToken(client_id=environ['AUTH0_CLIENT_ID'], client_secret=environ['AU
     url = 'https://' + environ['AUTH0_DOMAIN'] + '/oauth/token'
     headers = {'content-type': 'application/json'}
     parameter = {"client_id": client_id,
-                 "client_secret": client_secret,
+                 'client_secret': client_secret,
                  "audience": environ['API_IDENTIFIER'],
                  "grant_type": "client_credentials"}
     response = json.loads(requests.post(url, json=parameter, headers=headers).text)
@@ -43,10 +43,13 @@ class APITest(APITestCase):
         new_nation = Nation.objects.create(name="Test Nation",
                                            url_id="test_nation",
                                            color="fff",
-                                           wikipedia="https://en.wikipedia.org/wiki/Test")
+                                           references=["https://en.wikipedia.org/wiki/Test"],
+                                           aliases=[],
+                                           links=[])
         Territory.objects.create(start_date="1444-11-11",
                                  end_date="2018-01-01",
                                  nation=new_nation,
+                                 references=["https://en.wikipedia.org/wiki/Test"],
                                  geo=GEOSGeometry('{"type": "MultiPolygon","coordinates": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}'))
 
     def test_api_can_create_nation(self):
@@ -58,7 +61,9 @@ class APITest(APITestCase):
             "name": "Created Test Nation",
             "url_id": "created_test_nation",
             "color": "#ccffff",
-            "wikipedia": "https://en.wikipedia.org/wiki/Test"
+            "references": ["https://en.wikipedia.org/wiki/Test"],
+            'aliases': [],
+            'links': []
         }
         self.client.credentials(
             HTTP_AUTHORIZATION="Bearer " +getUserToken())
@@ -76,6 +81,7 @@ class APITest(APITestCase):
             "start_date": "2010-07-20",
             "end_date": "2018-07-20",
             "nation": 1,
+            'references': ["https://en.wikipedia.org/wiki/Test"],
             "geo": "{\"type\": \"MultiPolygon\",\"coordinates\": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}"
         }
         self.client.credentials(
@@ -98,6 +104,7 @@ class APITest(APITestCase):
             "start_date": "2010-07-20",
             "end_date": "2018-07-20",
             "nation": 1,
+            'references': ["https://en.wikipedia.org/wiki/Test"],
             "geo": '{"type": "FeatureCollection","features": [{"type": "Feature","id": "id0","geometry": {"type": "Polygon","coordinates": [[[100,0],[101,0],[101,1],[100,1],[100,0]]]},"properties": {"prop0": "value0","prop1": "value1"}},{"type": "Feature","properties": {},"geometry": {"type": "Polygon","coordinates": [[[101.22802734375,-1.043643455908483],[102.601318359375,-2.2516174965491453],[102.864990234375,-0.36254640877525024],[101.22802734375,-1.043643455908483]]]}}]}'
         }
         self.client.credentials(
@@ -136,7 +143,7 @@ class APITest(APITestCase):
             "name": "Created Test Nation",
             "url_id": "created_test_nation",
             "color": "#ccffff",
-            "wikipedia": "https://en.wikipedia.org/wiki/Test"
+            "references": ["https://en.wikipedia.org/wiki/Test"],
         }
         self.client.credentials(
             HTTP_AUTHORIZATION="Bearer " +getUserToken())

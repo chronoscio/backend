@@ -19,29 +19,40 @@ class Nation(models.Model):
                                         "should be kept short and must be unique",
                               unique=True)
     color = ColorField(help_text="Color to display on map",
-                       unique=True)
+                       unique=True,
+                       null=True,
+                       blank=True)
     history = HistoricalRecords()
 
-    #Flavor fields
+    ## Flavor fields
+
+    # required fields
+    references = ArrayField(
+        models.TextField(max_length=150),
+    )
+
+    # optional fields
     aliases = ArrayField(
         models.TextField(max_length=100),
         help_text="Alternative names this state may be known by",
-        null=True,
-        blank=True
+        blank=True,
     )
     description = models.TextField(help_text="Flavor text, brief history, etc.",
                                    blank=True)
-    wikipedia = models.URLField(help_text="Link to the Wikipedia article for this nation",
-                                blank=True)
+    links = ArrayField(
+        models.URLField(),
+        blank=True,
+    )
     CONTROL_TYPE_CHOICES = (
         ("CC", "Complete Control"),
         ("DT", "Disputed Territory"),
-        # TODO: Add more types later, drawing a blank atm
+        # TODO: Add more types later
     )
     control_type = models.TextField(
         max_length=2,
         choices=CONTROL_TYPE_CHOICES,
         default="CC",
+        blank=True,
     )
 
     #History fields
@@ -64,10 +75,12 @@ class Territory(models.Model):
     start_date = models.DateField(help_text="When this border takes effect")
     end_date = models.DateField(help_text="When this border ceases to exist")
     geo = models.GeometryField()
-
     nation = models.ForeignKey(Nation,
                                related_name="territories",
                                on_delete=models.CASCADE)
+    references = ArrayField(
+        models.TextField(max_length=150),
+    )
     history = HistoricalRecords()
 
     def clean(self, *args, **kwargs):
@@ -88,10 +101,50 @@ class Territory(models.Model):
 
 class DiplomaticRelation(models.Model):
     """
-    Abstract class for relationships between states, including wars, alliances, overlordships, etc.
-    This would be a whole 'nother project that should probably be primarily populated by Wikipedia scraping
-    Some relations will most likely be controversial, for example the earldoms of Ireland swore allegiance to
-        the English monarchs but in otherwise acted entirely independently, maybe have an autonomy slider
-        or something similar?
+    Defines political and diplomatic interactions between Nations.
     """
-    pass
+    start_date = models.DateField(help_text="When this relation takes effect")
+    end_date = models.DateField(help_text="When this relation ceases to exist")
+    parent_party = models.ManyToManyField(Nation, related_name='parent_parties')
+    child_party = models.ManyToManyField(Nation, related_name='child_parties')
+    DIPLO_TYPE_CHOICES = (
+        ("A", "Military Alliance"),
+        ("D", "Dual Monarchy"),
+        ("M", "Condominium"),
+        ("T", "Trade League"),
+        ("W", "At War"),
+        ('P', 'State or Province'),
+        ("CP", "Client State - Puppet State"),
+        ("CV", "Client State - Vassal State"),
+        ("CPU", "Client State - Personal Union"),
+        ("CCR", "Client State - Colony - Royal"),
+        ("CCP", "Client State - Colony - Propreitary"),
+        ("CCC", "Client State - Colony - Charter"),
+    )
+    diplo_type = models.TextField(
+        max_length=3,
+        choices=DIPLO_TYPE_CHOICES,
+    )
+    references = ArrayField(
+        models.TextField(max_length=150),
+    )
+
+    history = HistoricalRecords()
+
+    def clean(self, *args, **kwargs):
+        if self.start_date > self.end_date:
+            raise ValidationError("Start date cannot be later than end date")
+        if self.first_party == self.second_party:
+            raise ValidationError('Cannot have a relationship between the same nation(s)')
+
+        super(DiplomaticRelation, self).clean(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super(DiplomaticRelation, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return "%s - %s: %s - %s" % (self.first_party[0].name,
+                                     self.second_party[0].name,
+                                     self.start_date.strftime("%m/%d/%Y"),
+                                     self.end_date.strftime("%m/%d/%Y"))
