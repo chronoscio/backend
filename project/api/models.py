@@ -105,8 +105,8 @@ class DiplomaticRelation(models.Model):
     """
     start_date = models.DateField(help_text="When this relation takes effect")
     end_date = models.DateField(help_text="When this relation ceases to exist")
-    parent_party = models.ManyToManyField(Nation, related_name='parent_parties')
-    child_party = models.ManyToManyField(Nation, related_name='child_parties')
+    parent_parties = models.ManyToManyField(Nation, related_name='parent_parties')
+    child_parties = models.ManyToManyField(Nation, related_name='child_parties')
     DIPLO_TYPE_CHOICES = (
         ("A", "Military Alliance"),
         ("D", "Dual Monarchy"),
@@ -134,8 +134,6 @@ class DiplomaticRelation(models.Model):
     def clean(self, *args, **kwargs):
         if self.start_date > self.end_date:
             raise ValidationError("Start date cannot be later than end date")
-        if self.first_party == self.second_party:
-            raise ValidationError('Cannot have a relationship between the same nation(s)')
 
         super(DiplomaticRelation, self).clean(*args, **kwargs)
 
@@ -144,7 +142,7 @@ class DiplomaticRelation(models.Model):
         super(DiplomaticRelation, self).save(*args, **kwargs)
 
     def __str__(self):
-        return "%s - %s: %s - %s" % (self.first_party[0].name,
-                                     self.second_party[0].name,
+        return "%s - %s: %s - %s" % (self.parent_parties.all()[0].name,
+                                     self.child_parties.all()[0].name,
                                      self.start_date.strftime("%m/%d/%Y"),
                                      self.end_date.strftime("%m/%d/%Y"))

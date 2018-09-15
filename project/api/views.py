@@ -2,8 +2,8 @@ from ast import literal_eval as make_tuple
 from django.contrib.gis.geos import Polygon
 from rest_framework import viewsets, permissions
 
-from .models import Nation, Territory
-from .serializers import NationSerializer, TerritorySerializer
+from .models import Nation, Territory, DiplomaticRelation
+from .serializers import NationSerializer, TerritorySerializer, DiplomaticRelationSerializer
 
 class NationViewSet(viewsets.ModelViewSet):
     """
@@ -37,5 +37,15 @@ class TerritoryViewSet(viewsets.ModelViewSet):
                                                      end_date__gte=date)
 
         return self.queryset
+
+    # TODO use request.user to update revision table
+
+class DiplomaticRelationViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for the DiplomaticRelation model
+    """
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    queryset = DiplomaticRelation.objects.all()
+    serializer_class = DiplomaticRelationSerializer
 
     # TODO use request.user to update revision table

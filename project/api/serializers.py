@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.gis.geos import GEOSGeometry
 from rest_framework.serializers import ModelSerializer
 
-from .models import Nation, Territory
+from .models import Nation, Territory, DiplomaticRelation
 
 class NationSerializer(ModelSerializer):
     """
@@ -47,4 +47,12 @@ class TerritorySerializer(ModelSerializer):
 
     class Meta:
         model = Territory
+        fields = '__all__'
+
+class DiplomaticRelationSerializer(ModelSerializer):
+    """
+    Serializes the DiplomaticRelation model
+    """
+    class Meta:
+        model = DiplomaticRelation
         fields = '__all__'
