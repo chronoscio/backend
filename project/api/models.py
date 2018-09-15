@@ -7,42 +7,39 @@ from simple_history.models import HistoricalRecords
 from colorfield.fields import ColorField
 
 # Create your models here.
-class Nation(models.Model):
-    """
-    Cultural/governmental entity. Serves as foreign key for most Territories
-    """
+class Entity(models.Model):
     name = models.TextField(max_length=100,
                             help_text="Canonical name, should not include any epithets, must be unique",
                             unique=True)
     url_id = models.SlugField(max_length=75,
-                              help_text="Identifier used to lookup nations in the URL, "
+                              help_text="Identifier used to lookup PoliticalEntitys in the URL, "
                                         "should be kept short and must be unique",
                               unique=True)
+    references = ArrayField(
+        models.TextField(max_length=150),
+    )
+    links = ArrayField(
+        models.URLField(),
+        blank=True,
+    )
+    description = models.TextField(help_text="Flavor text, brief history, etc.",
+                                   blank=True)
+    aliases = ArrayField(
+        models.TextField(max_length=100),
+        help_text="Alternative names this state may be known by",
+        blank=True,
+    )
+
+class PoliticalEntity(Entity):
+    """
+    Cultural/governmental entity. Serves as foreign key for most Territories
+    """
     color = ColorField(help_text="Color to display on map",
                        unique=True,
                        null=True,
                        blank=True)
     history = HistoricalRecords()
 
-    ## Flavor fields
-
-    # required fields
-    references = ArrayField(
-        models.TextField(max_length=150),
-    )
-
-    # optional fields
-    aliases = ArrayField(
-        models.TextField(max_length=100),
-        help_text="Alternative names this state may be known by",
-        blank=True,
-    )
-    description = models.TextField(help_text="Flavor text, brief history, etc.",
-                                   blank=True)
-    links = ArrayField(
-        models.URLField(),
-        blank=True,
-    )
     CONTROL_TYPE_CHOICES = (
         ("CC", "Complete Control"),
         ("DT", "Disputed Territory"),
@@ -67,7 +64,7 @@ class Nation(models.Model):
 
 class Territory(models.Model):
     """
-    Defines the borders and controlled territories associated with a Nation.
+    Defines the borders and controlled territories associated with a PoliticalEntity.
     """
     class Meta:
         verbose_name_plural = "territories"
@@ -75,7 +72,7 @@ class Territory(models.Model):
     start_date = models.DateField(help_text="When this border takes effect")
     end_date = models.DateField(help_text="When this border ceases to exist")
     geo = models.GeometryField()
-    nation = models.ForeignKey(Nation,
+    entity = models.ForeignKey(PoliticalEntity,
                                related_name="territories",
                                on_delete=models.CASCADE)
     references = ArrayField(
@@ -95,18 +92,18 @@ class Territory(models.Model):
         super(Territory, self).save(*args, **kwargs)
 
     def __str__(self):
-        return "%s: %s - %s" % (self.nation.name,
+        return "%s: %s - %s" % (self.PoliticalEntity.name,
                                 self.start_date.strftime("%m/%d/%Y"),
                                 self.end_date.strftime("%m/%d/%Y"))
 
 class DiplomaticRelation(models.Model):
     """
-    Defines political and diplomatic interactions between Nations.
+    Defines political and diplomatic interactions between PoliticalEntitys.
     """
     start_date = models.DateField(help_text="When this relation takes effect")
     end_date = models.DateField(help_text="When this relation ceases to exist")
-    parent_parties = models.ManyToManyField(Nation, related_name='parent_parties')
-    child_parties = models.ManyToManyField(Nation, related_name='child_parties')
+    parent_parties = models.ManyToManyField(PoliticalEntity, related_name='parent_parties')
+    child_parties = models.ManyToManyField(PoliticalEntity, related_name='child_parties')
     DIPLO_TYPE_CHOICES = (
         ("A", "Military Alliance"),
         ("D", "Dual Monarchy"),
