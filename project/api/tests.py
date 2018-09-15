@@ -312,7 +312,7 @@ class APITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["nation"], 1)
 
-    def test_api_can_query_diprels(self):
+    def test_api_can_query_diprel(self):
         """
         Ensure we can query individual DipRels
         """
