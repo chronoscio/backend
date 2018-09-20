@@ -7,6 +7,8 @@ from simple_history.models import HistoricalRecords
 from colorfield.fields import ColorField
 
 # Create your models here.
+
+
 class Nation(models.Model):
     """
     Cultural/governmental entity. Serves as foreign key for most Territories
@@ -24,7 +26,7 @@ class Nation(models.Model):
                        blank=True)
     history = HistoricalRecords()
 
-    ## Flavor fields
+    # Flavor fields
 
     # required fields
     references = ArrayField(
@@ -55,7 +57,7 @@ class Nation(models.Model):
         blank=True,
     )
 
-    #History fields
+    # History fields
 
     # Foreign key to auth.User which will be updated every time the model is changed,
     # and is this stored in history as the user to update a specific revision
@@ -64,6 +66,7 @@ class Nation(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Territory(models.Model):
     """
@@ -87,8 +90,16 @@ class Territory(models.Model):
         if self.start_date > self.end_date:
             raise ValidationError("Start date cannot be later than end date")
         if loads(self.geo.json)["type"] != "Polygon" and loads(self.geo.json)["type"] != "MultiPolygon":
-            raise ValidationError("Only Polygon and MultiPolygon objects are acceptable geometry types")
+            raise ValidationError(
+                "Only Polygon and MultiPolygon objects are acceptable geometry types")
         super(Territory, self).clean(*args, **kwargs)
+
+        print "asd"
+        territories = Territory.objects.filter(nation=self.nation)
+        for territory in territories:
+            if (territory.start_date <= self.start_date <= territory.end_date) or (territory.start_date <= self.end_date <= territory.end_date):
+                raise ValidationError(
+                    "Another territory of this nation exists during this timeframe.")
 
     def save(self, *args, **kwargs):
         self.full_clean()
@@ -99,14 +110,17 @@ class Territory(models.Model):
                                 self.start_date.strftime("%m/%d/%Y"),
                                 self.end_date.strftime("%m/%d/%Y"))
 
+
 class DiplomaticRelation(models.Model):
     """
     Defines political and diplomatic interactions between Nations.
     """
     start_date = models.DateField(help_text="When this relation takes effect")
     end_date = models.DateField(help_text="When this relation ceases to exist")
-    parent_parties = models.ManyToManyField(Nation, related_name='parent_parties')
-    child_parties = models.ManyToManyField(Nation, related_name='child_parties')
+    parent_parties = models.ManyToManyField(
+        Nation, related_name='parent_parties')
+    child_parties = models.ManyToManyField(
+        Nation, related_name='child_parties')
     DIPLO_TYPE_CHOICES = (
         ("A", "Military Alliance"),
         ("D", "Dual Monarchy"),
