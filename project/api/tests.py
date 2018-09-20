@@ -102,8 +102,8 @@ class APITest(APITestCase):
         """
         url = reverse("territory-list")
         data = {
-            "start_date": "2010-07-20",
-            "end_date": "2018-07-20",
+            "start_date": "2018-02-02",
+            "end_date": "2018-02-03",
             "nation": 1,
             'references': ["https://en.wikipedia.org/wiki/Test"],
             "geo": "{\"type\": \"MultiPolygon\",\"coordinates\": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}"
@@ -151,8 +151,8 @@ class APITest(APITestCase):
         """
         url = reverse("territory-list")
         data = {
-            "start_date": "2010-07-20",
-            "end_date": "2018-07-20",
+            "start_date": "2018-03-03",
+            "end_date": "2018-03-04",
             "nation": 1,
             'references': ["https://en.wikipedia.org/wiki/Test"],
             "geo": '{"type": "FeatureCollection","features": [{"type": "Feature","id": "id0","geometry": {"type": "Polygon","coordinates": [[[100,0],[101,0],[101,1],[100,1],[100,0]]]},"properties": {"prop0": "value0","prop1": "value1"}},{"type": "Feature","properties": {},"geometry": {"type": "Polygon","coordinates": [[[101.22802734375,-1.043643455908483],[102.601318359375,-2.2516174965491453],[102.864990234375,-0.36254640877525024],[101.22802734375,-1.043643455908483]]]}}]}'
@@ -173,8 +173,8 @@ class APITest(APITestCase):
         """
         url = reverse("territory-detail", args=[1])
         data = {
-            "start_date": "2010-07-20",
-            "end_date": "2018-07-20",
+            "start_date": "2018-04-04",
+            "end_date": "2018-04-05",
             "nation": 1,
             "geo": "{\"type\": \"MultiPolygon\",\"coordinates\": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}"
         }
