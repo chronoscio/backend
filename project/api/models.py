@@ -30,6 +30,9 @@ class Entity(models.Model):
         blank=True,
     )
 
+    class Meta:
+        abstract = True
+
 class PoliticalEntity(Entity):
     """
     Cultural/governmental entity. Serves as foreign key for most Territories
@@ -72,9 +75,12 @@ class Territory(models.Model):
     start_date = models.DateField(help_text="When this border takes effect")
     end_date = models.DateField(help_text="When this border ceases to exist")
     geo = models.GeometryField()
-    entity = models.ForeignKey(PoliticalEntity,
+    political_entity = models.ForeignKey(PoliticalEntity,
                                related_name="territories",
-                               on_delete=models.CASCADE)
+                               on_delete=models.CASCADE,
+                               null=True,
+                               blank=True
+                               )
     references = ArrayField(
         models.TextField(max_length=150),
     )
@@ -92,7 +98,7 @@ class Territory(models.Model):
         super(Territory, self).save(*args, **kwargs)
 
     def __str__(self):
-        return "%s: %s - %s" % (self.PoliticalEntity.name,
+        return "%s: %s - %s" % (self.political_entity.name,
                                 self.start_date.strftime("%m/%d/%Y"),
                                 self.end_date.strftime("%m/%d/%Y"))
 

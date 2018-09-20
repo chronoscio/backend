@@ -4,14 +4,14 @@ from django.contrib.auth.models import User
 from django.contrib.gis.geos import GEOSGeometry
 from rest_framework.serializers import ModelSerializer
 
-from .models import Nation, Territory, DiplomaticRelation
+from .models import PoliticalEntity, Territory, DiplomaticRelation
 
-class NationSerializer(ModelSerializer):
+class PoliticalEntitySerializer(ModelSerializer):
     """
-    Serializes the Nation model
+    Serializes the PoliticalEntity model
     """
     class Meta:
-        model = Nation
+        model = PoliticalEntity
         fields = '__all__'
 
 class TerritorySerializer(ModelSerializer):
@@ -23,9 +23,9 @@ class TerritorySerializer(ModelSerializer):
 
         # Update ret to include passed in data
         for field, val in data.items():
-            if field == 'nation':
-                ret['nation'] = Nation.objects.get(pk=val)
-            if field != 'geo' and field != 'nation':
+            if field == 'PoliticalEntity':
+                ret['PoliticalEntity'] = PoliticalEntity.objects.get(pk=val)
+            if field != 'geo' and field != 'PoliticalEntity':
                 ret[field] = val
 
         # Convert geo field to MultiPolygon if it is a FeatureCollection
