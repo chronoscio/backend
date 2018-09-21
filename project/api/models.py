@@ -12,7 +12,7 @@ class Entity(models.Model):
                             help_text="Canonical name, should not include any epithets, must be unique",
                             unique=True)
     url_id = models.SlugField(max_length=75,
-                              help_text="Identifier used to lookup PoliticalEntitys in the URL, "
+                              help_text="Identifier used to lookup Entities in the URL, "
                                         "should be kept short and must be unique",
                               unique=True)
     references = ArrayField(
@@ -67,7 +67,7 @@ class PoliticalEntity(Entity):
 
 class Territory(models.Model):
     """
-    Defines the borders and controlled territories associated with a PoliticalEntity.
+    Defines the borders and controlled territories associated with an Entity.
     """
     class Meta:
         verbose_name_plural = "territories"
@@ -75,7 +75,7 @@ class Territory(models.Model):
     start_date = models.DateField(help_text="When this border takes effect")
     end_date = models.DateField(help_text="When this border ceases to exist")
     geo = models.GeometryField()
-    political_entity = models.ForeignKey(PoliticalEntity,
+    entity = models.ForeignKey(Entity,
                                related_name="territories",
                                on_delete=models.CASCADE,
                                null=True,
@@ -98,7 +98,7 @@ class Territory(models.Model):
         super(Territory, self).save(*args, **kwargs)
 
     def __str__(self):
-        return "%s: %s - %s" % (self.political_entity.name,
+        return "%s: %s - %s" % (self.entity.name,
                                 self.start_date.strftime("%m/%d/%Y"),
                                 self.end_date.strftime("%m/%d/%Y"))
 
