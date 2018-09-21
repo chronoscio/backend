@@ -95,7 +95,7 @@ class Territory(models.Model):
         super(Territory, self).clean(*args, **kwargs)
 
         # This date check is inculsive.
-        if Territory.objects.filter(start_date__range=(self.start_date, self.end_date)).exists() or Territory.objects.filter(end_date__range=(self.start_date, self.end_date)).exists():
+        if Territory.objects.filter(start_date__range=(self.start_date, self.end_date), nation=self.nation).exists() or Territory.objects.filter(end_date__range=(self.start_date, self.end_date), nation=self.nation).exists():
             raise ValidationError(
                 "Another territory of this nation exists during this timeframe.")
 
