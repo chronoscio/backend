@@ -1,6 +1,7 @@
 import json
 import requests
 
+from django.conf import settings
 from django.urls import reverse
 from django.contrib.gis.geos import GEOSGeometry
 from django.test import TestCase
@@ -28,16 +29,16 @@ def memoize(function):
 
 
 @memoize
-def getUserToken(client_id=environ['AUTH0_CLIENT_ID'], client_secret=environ['AUTH0_CLIENT_SECRET']):
-    url = 'https://' + environ['AUTH0_DOMAIN'] + '/oauth/token'
+def getUserToken(client_id=settings.AUTH0_CLIENT_ID, client_secret=settings.AUTH0_CLIENT_SECRET):
+    url = 'https://' + settings.AUTH0_DOMAIN + '/oauth/token'
     headers = {'content-type': 'application/json'}
     parameter = {"client_id": client_id,
                  'client_secret': client_secret,
-                 "audience": environ['API_IDENTIFIER'],
+                 "audience": settings.API_IDENTIFIER,
                  "grant_type": "client_credentials"}
     response = json.loads(requests.post(
         url, json=parameter, headers=headers).text)
-    return response['access_token']
+    return response['access_token'] 
 
 
 class ModelTest(TestCase):

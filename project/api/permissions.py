@@ -1,9 +1,9 @@
-import os
 import jwt
 import json
 import re
 
 from django.http import JsonResponse
+from django.conf import settings
 from rest_framework import permissions
 from functools import wraps
 from six.moves.urllib import request as req
@@ -47,15 +47,13 @@ def requires_scope(required_scope):
         @wraps(f)
         def decorated(*args, **kwargs):
             token = get_token_auth_header(args[0])
-            AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
-            API_IDENTIFIER = os.environ.get('API_IDENTIFIER')
-            jsonurl = req.urlopen('https://' + AUTH0_DOMAIN + '/.well-known/jwks.json')
+            jsonurl = req.urlopen('https://' + settings.AUTH0_DOMAIN + '/.well-known/jwks.json')
             jwks = json.loads(jsonurl.read())
             body = re.sub("(.{64})", "\\1\n", jwks['keys'][0]['x5c'][0], 0, re.DOTALL)
             cert = '-----BEGIN CERTIFICATE-----\n' + body + '\n-----END CERTIFICATE-----'
             certificate = load_pem_x509_certificate(cert.encode('utf-8'), default_backend())
             public_key = certificate.public_key()
-            decoded = jwt.decode(token, public_key, audience=API_IDENTIFIER, algorithms=['RS256'])
+            decoded = jwt.decode(token, public_key, audience=settings.API_IDENTIFIER, algorithms=['RS256'])
 
             if decoded.get("scope"):
                 token_scopes = decoded["scope"].split()
