@@ -94,11 +94,9 @@ class Territory(models.Model):
                 "Only Polygon and MultiPolygon objects are acceptable geometry types")
         super(Territory, self).clean(*args, **kwargs)
 
-        territories = Territory.objects.filter(nation=self.nation)
-        for territory in territories:
-            if (self.start_date <= territory.start_date <= territory.end_date <= self.end_date) or (territory.start_date <= self.start_date <= territory.end_date) or (territory.start_date <= self.end_date <= territory.end_date):
-                raise ValidationError(
-                    "Another territory of this nation exists during this timeframe.")
+        #This date check is inculsive. 
+        if Territory.objects.filter(start_date__range=(self.start_date,self.end_date)).exists() or Territory.objects.filter(end_date__range=(self.start_date,self.end_date)).exists():
+            raise ValidationError("Another territory of this nation exists during this timeframe.")
 
     def save(self, *args, **kwargs):
         self.full_clean()
