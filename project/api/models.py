@@ -98,7 +98,10 @@ class Territory(models.Model):
         if Territory.objects.filter(start_date__range=(self.start_date, self.end_date), nation=self.nation).exists() or Territory.objects.filter(end_date__range=(self.start_date, self.end_date), nation=self.nation).exists():
             raise ValidationError(
                 "Another territory of this nation exists during this timeframe.")
-
+        if Territory.objects.filter(start_date__lte=self.end_date, end_date__gte=self.end_date).exists() and Territory.objects.filter(start_date__lte=self.start_date,end_date__gte=self.start_date).exists():
+            raise ValidationError(
+                "Another territory of this nation exists during this timeframe.")
+    
     def save(self, *args, **kwargs):
         self.full_clean()
         super(Territory, self).save(*args, **kwargs)
