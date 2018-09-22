@@ -64,15 +64,15 @@ class ModelTest(TestCase):
                                              aliases=[],
                                              links=[])
         child_nation.save()
-        Territory.objects.create(start_date="2018-01-02",
-                                 end_date="2018-01-04",
+        Territory.objects.create(start_date="0002-01-01",
+                                 end_date="0004-01-01",
                                  nation=new_nation,
                                  references=[
                                      "https://en.wikipedia.org/wiki/Test"],
                                  geo=GEOSGeometry('{"type": "MultiPolygon","coordinates": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}'))
         diprel = DiplomaticRelation.objects.create(
-            start_date="1444-11-11",
-            end_date="2018-01-01",
+            start_date="0001-01-01",
+            end_date="0005-01-01",
             references=["https://en.wikipedia.org/wiki/Test"],
             diplo_type='A',
         )
@@ -95,55 +95,56 @@ class ModelTest(TestCase):
 
     def test_model_can_create_territory(self):
         """
-        Ensure that we can create territories.
+        Ensure that we can create territories. Specifically checks if we can create [start_date+1,end_date-1]
         """
         nation = Nation.objects.get(url_id="test_nation")
-        Territory.objects.create(start_date="2018-01-07",
-                                 end_date="2018-01-08",
+        Territory.objects.create(start_date="0007-01-01",
+                                 end_date="0008-01-01",
                                  nation=nation,
                                  references=[
                                      "https://en.wikipedia.org/wiki/Test"],
                                  geo=GEOSGeometry('{"type": "MultiPolygon","coordinates": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}'))
-
-        Territory.objects.create(start_date="2018-01-05",
-                                 end_date="2018-01-06",
-                                 nation=nation,
-                                 references=[
-                                     "https://en.wikipedia.org/wiki/Test"],
-                                 geo=GEOSGeometry('{"type": "MultiPolygon","coordinates": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}'))
-
         self.assertTrue(Territory.objects.filter(
-            nation=nation, start_date="2018-01-05", end_date="2018-01-06").exists())
+            nation=nation, start_date="0007-01-01", end_date="0008-01-01").exists())
+        nation = Nation.objects.get(url_id="test_nation")
+        Territory.objects.create(start_date="0004-01-02",
+                                 end_date="0006-12-31",
+                                 nation=nation,
+                                 references=[
+                                     "https://en.wikipedia.org/wiki/Test"],
+                                 geo=GEOSGeometry('{"type": "MultiPolygon","coordinates": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}'))
+        self.assertTrue(Territory.objects.filter(
+            nation=nation, start_date="0004-01-02", end_date="0006-12-31").exists())
 
-    def test_model_cant_create_territory(self):
+    def test_model_can_not_create_territory(self):
         """
         Ensure that date checks work.
         """
         new_nation = Nation.objects.get(url_id="test_nation")
         with self.assertRaises(ValidationError):
-            Territory.objects.create(start_date="2018-01-01",
-                                     end_date="2010-01-03",
+            Territory.objects.create(start_date="0001-01-01",
+                                     end_date="0003-01-01",
                                      nation=new_nation,
                                      references=[
                                          "https://en.wikipedia.org/wiki/Test"],
                                      geo=GEOSGeometry('{"type": "MultiPolygon","coordinates": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}'))
         with self.assertRaises(ValidationError):
-            Territory.objects.create(start_date="2018-01-02",
-                                     end_date="2010-01-03",
+            Territory.objects.create(start_date="0002-01-01",
+                                     end_date="0003-01-01",
                                      nation=new_nation,
                                      references=[
                                          "https://en.wikipedia.org/wiki/Test"],
                                      geo=GEOSGeometry('{"type": "MultiPolygon","coordinates": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}'))
         with self.assertRaises(ValidationError):
-            Territory.objects.create(start_date="2018-01-03",
-                                     end_date="2010-01-05",
+            Territory.objects.create(start_date="0003-01-01",
+                                     end_date="0005-01-01",
                                      nation=new_nation,
                                      references=[
                                          "https://en.wikipedia.org/wiki/Test"],
                                      geo=GEOSGeometry('{"type": "MultiPolygon","coordinates": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}'))
         with self.assertRaises(ValidationError):
-            Territory.objects.create(start_date="2018-01-01",
-                                     end_date="2010-01-05",
+            Territory.objects.create(start_date="0001-01-01",
+                                     end_date="0005-01-01",
                                      nation=new_nation,
                                      references=[
                                          "https://en.wikipedia.org/wiki/Test"],
@@ -173,15 +174,15 @@ class APITest(APITestCase):
                                              aliases=[],
                                              links=[])
         child_nation.save()
-        Territory.objects.create(start_date="1444-11-11",
-                                 end_date="2018-01-01",
+        Territory.objects.create(start_date="0001-01-01",
+                                 end_date="0005-01-01",
                                  nation=new_nation,
                                  references=[
                                      "https://en.wikipedia.org/wiki/Test"],
                                  geo=GEOSGeometry('{"type": "MultiPolygon","coordinates": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}'))
         diprel = DiplomaticRelation.objects.create(
-            start_date="1444-11-11",
-            end_date="2018-01-01",
+            start_date="0001-01-01",
+            end_date="0005-01-01",
             references=["https://en.wikipedia.org/wiki/Test"],
             diplo_type='A',
         )
@@ -214,8 +215,8 @@ class APITest(APITestCase):
         """
         url = reverse("territory-list")
         data = {
-            "start_date": "2018-02-02",
-            "end_date": "2018-02-03",
+            "start_date": "0006-01-01",
+            "end_date": "0007-01-01",
             "nation": 1,
             'references': ["https://en.wikipedia.org/wiki/Test"],
             "geo": "{\"type\": \"MultiPolygon\",\"coordinates\": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}"
@@ -236,8 +237,8 @@ class APITest(APITestCase):
         """
         url = reverse("diplomaticrelation-list")
         data = {
-            "start_date": "2010-07-20",
-            "end_date": "2018-07-20",
+            "start_date": "0001-01-01",
+            "end_date": "0005-01-01",
             "references": [
                 "https://en.wikipedia.org/wiki/Test"
             ],
@@ -263,8 +264,8 @@ class APITest(APITestCase):
         """
         url = reverse("territory-list")
         data = {
-            "start_date": "2018-03-03",
-            "end_date": "2018-03-04",
+            "start_date": "0008-01-01",
+            "end_date": "0009-01-01",
             "nation": 1,
             'references': ["https://en.wikipedia.org/wiki/Test"],
             "geo": '{"type": "FeatureCollection","features": [{"type": "Feature","id": "id0","geometry": {"type": "Polygon","coordinates": [[[100,0],[101,0],[101,1],[100,1],[100,0]]]},"properties": {"prop0": "value0","prop1": "value1"}},{"type": "Feature","properties": {},"geometry": {"type": "Polygon","coordinates": [[[101.22802734375,-1.043643455908483],[102.601318359375,-2.2516174965491453],[102.864990234375,-0.36254640877525024],[101.22802734375,-1.043643455908483]]]}}]}'
@@ -285,8 +286,8 @@ class APITest(APITestCase):
         """
         url = reverse("territory-detail", args=[1])
         data = {
-            "start_date": "2018-04-04",
-            "end_date": "2018-04-05",
+            "start_date": "0010-01-01",
+            "end_date": "0011-01-01",
             "nation": 1,
             "geo": "{\"type\": \"MultiPolygon\",\"coordinates\": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}"
         }
@@ -319,8 +320,8 @@ class APITest(APITestCase):
         """
         url = reverse("diplomaticrelation-detail", args=[1])
         data = {
-            "start_date": "2010-07-20",
-            "end_date": "2018-07-20",
+            "start_date": "0006-01-01",
+            "end_date": "0010-01-01",
             "references": [
                 "https://en.wikipedia.org/wiki/Test"
             ],
@@ -391,7 +392,7 @@ class APITest(APITestCase):
         """
         Ensure we can query for territories with a date
         """
-        url = reverse("territory-list")+"?date=2011-01-1"
+        url = reverse("territory-list")+"?date=0001-01-01"
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[0]["nation"], 1)
