@@ -295,7 +295,7 @@ class APITest(APITestCase):
             HTTP_AUTHORIZATION="Bearer " + getUserToken())
         response = self.client.put(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["nation"], 1)
+        self.assertEqual(response.data["nation"], 'test_nation')
 
     def test_api_can_update_nation(self):
         """
@@ -355,7 +355,7 @@ class APITest(APITestCase):
         url = reverse("territory-list")
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0]["nation"], 1)
+        self.assertEqual(response.data[0]["nation"], 'test_nation')
 
     def test_api_can_query_diprels(self):
         """
@@ -375,7 +375,7 @@ class APITest(APITestCase):
             "?bounds=((0.0, 0.0), (0.0, 150.0), (150.0, 150.0), (150.0, 0.0), (0.0, 0.0))"
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0]["nation"], 1)
+        self.assertEqual(response.data[0]["nation"], 'test_nation')
 
     def test_api_can_not_query_territories_bounds(self):
         """
@@ -395,7 +395,7 @@ class APITest(APITestCase):
         url = reverse("territory-list")+"?date=0001-01-01"
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0]["nation"], 1)
+        self.assertEqual(response.data[0]["nation"], 'test_nation')
 
     def test_api_can_not_query_territories_date(self):
         """
@@ -423,7 +423,7 @@ class APITest(APITestCase):
         url = reverse("territory-detail", args=[1])
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["nation"], 1)
+        self.assertEqual(response.data["nation"], 'test_nation')
 
     def test_api_can_query_diprel(self):
         """
