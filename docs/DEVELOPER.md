@@ -22,6 +22,7 @@ of the repository used graphene-django as a GraphQl server.
 The `config/` folder contains the nginx configuration and a pip `requirements.txt`.
 
 ### Authentication
+
 Very minimal user information is stored on the backend. Additionally, the frontend does
 not call the backend to retrieve or interact with any users. This is all handled via Auth0,
 which provides us with a stateless JWT which can be validated through their servers. An
@@ -29,22 +30,38 @@ which provides us with a stateless JWT which can be validated through their serv
 backend
 
 ### Database
+
 [PostgreSQL](https://www.postgresql.org/) is the primary database backend for this project. The
 [PostGIS](https://postgis.net/) extension is additionally used to perform spatial relation tasks,
 and the [djangorestframework-gis](https://github.com/djangonauts/django-rest-framework-gis) package
 is used to allow it to play nice with DRF.
 
 ## Docker and Makefile
+
 The project itself uses [docker-compose](https://docs.docker.com/compose/) which is
 principally interacted with via a `Makefile`. Running `make` or `make help` will print
 a documented list of all available commands and shortcuts to help with development, so
 a nuanced understanding of docker is not necessary for code contribution.
 
-### API endpoints
+## API endpoints
+
 ```bash
 $ curl --request GET   --url http://localhost/api/    --header 'athorization: Bearer {ACCESS_TOKEN}'
 {
     "nations": "http://web/api/nations/",
     "territories": "http://web/api/territories/"
 }
+```
+
+## Obtaining Test Data
+
+```bash
+# Import:
+mv docs/example_db_dump.json project/db.json # optional, uses our provided test data
+docker-compose exec web python manage.py loaddata db.json # note that this will assume db.json is in the project directory
+
+# Export:
+docker-compose exec web python manage.py dumpdata \
+  --natural-foreign --exclude auth.permission --exclude contenttypes \
+  > db.json
 ```
