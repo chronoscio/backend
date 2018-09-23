@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'simple_history',
     'colorfield',
-    'api'
+    'api',
+    'gm2m'
 ]
 
 MIDDLEWARE = [

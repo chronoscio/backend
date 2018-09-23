@@ -5,8 +5,11 @@ from django.contrib.gis.db import models
 from django.contrib.postgres.fields import ArrayField
 from simple_history.models import HistoricalRecords
 from colorfield.fields import ColorField
+from gm2m import GM2MField
 
 # Create your models here.
+
+
 class Entity(models.Model):
     name = models.TextField(max_length=100,
                             help_text="Canonical name, should not include any epithets, must be unique",
@@ -32,6 +35,7 @@ class Entity(models.Model):
 
     class Meta:
         abstract = True
+
 
 class PoliticalEntity(Entity):
     """
@@ -65,6 +69,7 @@ class PoliticalEntity(Entity):
     def __str__(self):
         return self.name
 
+
 class Territory(models.Model):
     """
     Defines the borders and controlled territories associated with an Entity.
@@ -75,12 +80,13 @@ class Territory(models.Model):
     start_date = models.DateField(help_text="When this border takes effect")
     end_date = models.DateField(help_text="When this border ceases to exist")
     geo = models.GeometryField()
-    entity = models.ForeignKey(Entity,
-                               related_name="territories",
-                               on_delete=models.CASCADE,
-                               null=True,
-                               blank=True
-                               )
+    # entity = models.ForeignKey(Entity,
+    #                            related_name="territories",
+    #                            on_delete=models.CASCADE,
+    #                            null=True,
+    #                            blank=True
+    #                            )
+    entity = GM2MField()
     references = ArrayField(
         models.TextField(max_length=150),
     )
@@ -101,6 +107,7 @@ class Territory(models.Model):
         return "%s: %s - %s" % (self.entity.name,
                                 self.start_date.strftime("%m/%d/%Y"),
                                 self.end_date.strftime("%m/%d/%Y"))
+
 
 class DiplomaticRelation(models.Model):
     """
