@@ -8,11 +8,19 @@ from colorfield.fields import ColorField
 
 # Create your models here.
 
+class NationManager(models.Manager):
+    """
+    Manager for the Nation model to handle lookups by url_id
+    """
+    def get_by_natural_key(self, url_id):
+        return self.get(url_id=url_id)
 
 class Nation(models.Model):
     """
     Cultural/governmental entity. Serves as foreign key for most Territories
     """
+    objects = NationManager()
+
     name = models.TextField(max_length=100,
                             help_text="Canonical name, should not include any epithets, must be unique",
                             unique=True)
@@ -63,6 +71,9 @@ class Nation(models.Model):
     # and is this stored in history as the user to update a specific revision
     # Consider other metadata (DateTime) for the revision (may be handled by django-simple-history)
     # TODO: implement this
+
+    def natural_key(self):
+        return self.url_id
 
     def __str__(self):
         return self.name
