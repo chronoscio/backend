@@ -38,7 +38,7 @@ def getUserToken(client_id=settings.AUTH0_CLIENT_ID, client_secret=settings.AUTH
                  "grant_type": "client_credentials"}
     response = json.loads(requests.post(
         url, json=parameter, headers=headers).text)
-    return response['access_token'] 
+    return response['access_token']
 
 
 class ModelTest(TestCase):
