@@ -175,12 +175,13 @@ class APITest(APITestCase):
                                              aliases=[],
                                              links=[])
         child_nation.save()
-        Territory.objects.create(start_date="0001-01-01",
-                                 end_date="0005-01-01",
-                                 nation=new_nation,
-                                 references=[
-                                     "https://en.wikipedia.org/wiki/Test"],
-                                 geo=GEOSGeometry('{"type": "MultiPolygon","coordinates": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}'))
+        self.territory = Territory.objects.create(
+            start_date="0001-01-01",
+            end_date="0005-01-01",
+            nation=new_nation,
+            references=[
+                "https://en.wikipedia.org/wiki/Test"],
+            geo=GEOSGeometry('{"type": "MultiPolygon","coordinates": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}'))
         diprel = DiplomaticRelation.objects.create(
             start_date="0001-01-01",
             end_date="0005-01-01",
@@ -210,53 +211,40 @@ class APITest(APITestCase):
         self.assertEqual(Nation.objects.count(), 3)
         self.assertEqual(Nation.objects.get(pk=3).name, "Created Test Nation")
 
-    def test_api_can_create_territory(self):
+    def test_api_can_update_nation(self):
         """
-        Ensure we can create a new territory
+        Ensure we can update individual nations
         """
-        url = reverse("territory-list")
+        url = reverse("nation-detail", args=["test_nation"])
         data = {
-            "start_date": "0006-01-01",
-            "end_date": "0007-01-01",
-            "nation": 1,
-            'references': ["https://en.wikipedia.org/wiki/Test"],
-            "geo": "{\"type\": \"MultiPolygon\",\"coordinates\": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}"
+            "name": "Created Test Nation",
+            "url_id": "created_test_nation",
+            "color": "#ccffff",
+            "references": ["https://en.wikipedia.org/wiki/Test"],
         }
         self.client.credentials(
             HTTP_AUTHORIZATION="Bearer " + getUserToken())
-        response = self.client.post(url, data, format="json")
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Territory.objects.count(), 2)
-        self.assertEqual(
-            Territory.objects.get(pk=2).nation,
-            Nation.objects.get(pk=1)
-        )
+        response = self.client.put(url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["name"], "Created Test Nation")
 
-    def test_api_can_create_diprel(self):
+    def test_api_can_query_nations(self):
         """
-        Ensure we can create a new DiplomaticRelation
+        Ensure we can query for all nations
         """
-        url = reverse("diplomaticrelation-list")
-        data = {
-            "start_date": "0001-01-01",
-            "end_date": "0005-01-01",
-            "references": [
-                "https://en.wikipedia.org/wiki/Test"
-            ],
-            "parent_parties": [
-                1
-            ],
-            "child_parties": [
-                1
-            ],
-            "diplo_type": "A"
-        }
-        self.client.credentials(
-            HTTP_AUTHORIZATION="Bearer " + getUserToken())
-        response = self.client.post(url, data, format="json")
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(DiplomaticRelation.objects.count(), 2)
-        self.assertEqual(DiplomaticRelation.objects.get(pk=2).diplo_type, 'A')
+        url = reverse("nation-list")
+        response = self.client.get(url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]["name"], "Test Nation")
+
+    def test_api_can_query_nation(self):
+        """
+        Ensure we can query individual nations
+        """
+        url = reverse("nation-detail", args=["test_nation"])
+        response = self.client.get(url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["name"], "Test Nation")
 
     def test_api_can_create_territory_FC(self):
         """
@@ -281,6 +269,28 @@ class APITest(APITestCase):
             Nation.objects.get(pk=1)
         )
 
+    def test_api_can_create_territory(self):
+        """
+        Ensure we can create a new territory
+        """
+        url = reverse("territory-list")
+        data = {
+            "start_date": "0006-01-01",
+            "end_date": "0007-01-01",
+            "nation": 1,
+            'references': ["https://en.wikipedia.org/wiki/Test"],
+            "geo": "{\"type\": \"MultiPolygon\",\"coordinates\": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}"
+        }
+        self.client.credentials(
+            HTTP_AUTHORIZATION="Bearer " + getUserToken())
+        response = self.client.post(url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Territory.objects.count(), 2)
+        self.assertEqual(
+            Territory.objects.get(pk=2).nation,
+            Nation.objects.get(pk=1)
+        )
+
     def test_api_can_update_territory(self):
         """
         Ensure we can update individual territories
@@ -298,57 +308,6 @@ class APITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["nation"], 'test_nation')
 
-    def test_api_can_update_nation(self):
-        """
-        Ensure we can update individual nations
-        """
-        url = reverse("nation-detail", args=["test_nation"])
-        data = {
-            "name": "Created Test Nation",
-            "url_id": "created_test_nation",
-            "color": "#ccffff",
-            "references": ["https://en.wikipedia.org/wiki/Test"],
-        }
-        self.client.credentials(
-            HTTP_AUTHORIZATION="Bearer " + getUserToken())
-        response = self.client.put(url, data, format="json")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["name"], "Created Test Nation")
-
-    def test_api_can_update_diprel(self):
-        """
-        Ensure we can update individual DipRels
-        """
-        url = reverse("diplomaticrelation-detail", args=[1])
-        data = {
-            "start_date": "0006-01-01",
-            "end_date": "0010-01-01",
-            "references": [
-                "https://en.wikipedia.org/wiki/Test"
-            ],
-            "parent_parties": [
-                1
-            ],
-            "child_parties": [
-                1
-            ],
-            "diplo_type": "A"
-        }
-        self.client.credentials(
-            HTTP_AUTHORIZATION="Bearer " + getUserToken())
-        response = self.client.put(url, data, format="json")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['diplo_type'], 'A')
-
-    def test_api_can_query_nations(self):
-        """
-        Ensure we can query for all nations
-        """
-        url = reverse("nation-list")
-        response = self.client.get(url, format="json")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0]["name"], "Test Nation")
-
     def test_api_can_query_territories(self):
         """
         Ensure we can query for all territories
@@ -358,14 +317,14 @@ class APITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[0]["nation"], 'test_nation')
 
-    def test_api_can_query_diprels(self):
+    def test_api_can_query_territory(self):
         """
-        Ensure we can query for all DipRels
+        Ensure we can query individual territories
         """
-        url = reverse("diplomaticrelation-list")
+        url = reverse("territory-detail", args=[1])
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0]['diplo_type'], 'A')
+        self.assertEqual(response.data["nation"], 'test_nation')
 
     def test_api_can_query_territories_bounds(self):
         """
@@ -407,24 +366,75 @@ class APITest(APITestCase):
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(not response.data)
-
-    def test_api_can_query_nation(self):
+    
+    def test_api_can_query_territories_exclude(self):
         """
-        Ensure we can query individual nations
+        Ensure we can exclude territories by id
         """
-        url = reverse("nation-detail", args=["test_nation"])
+        url = reverse("territory-list")+"?exclude_ids="+str(self.territory.id)
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["name"], "Test Nation")
+        self.assertTrue(not response.data)
 
-    def test_api_can_query_territory(self):
+    def test_api_can_create_diprel(self):
         """
-        Ensure we can query individual territories
+        Ensure we can create a new DiplomaticRelation
         """
-        url = reverse("territory-detail", args=[1])
+        url = reverse("diplomaticrelation-list")
+        data = {
+            "start_date": "0001-01-01",
+            "end_date": "0005-01-01",
+            "references": [
+                "https://en.wikipedia.org/wiki/Test"
+            ],
+            "parent_parties": [
+                1
+            ],
+            "child_parties": [
+                1
+            ],
+            "diplo_type": "A"
+        }
+        self.client.credentials(
+            HTTP_AUTHORIZATION="Bearer " + getUserToken())
+        response = self.client.post(url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(DiplomaticRelation.objects.count(), 2)
+        self.assertEqual(DiplomaticRelation.objects.get(pk=2).diplo_type, 'A')
+
+    def test_api_can_update_diprel(self):
+        """
+        Ensure we can update individual DipRels
+        """
+        url = reverse("diplomaticrelation-detail", args=[1])
+        data = {
+            "start_date": "0006-01-01",
+            "end_date": "0010-01-01",
+            "references": [
+                "https://en.wikipedia.org/wiki/Test"
+            ],
+            "parent_parties": [
+                1
+            ],
+            "child_parties": [
+                1
+            ],
+            "diplo_type": "A"
+        }
+        self.client.credentials(
+            HTTP_AUTHORIZATION="Bearer " + getUserToken())
+        response = self.client.put(url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['diplo_type'], 'A')
+
+    def test_api_can_query_diprels(self):
+        """
+        Ensure we can query for all DipRels
+        """
+        url = reverse("diplomaticrelation-list")
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["nation"], 'test_nation')
+        self.assertEqual(response.data[0]['diplo_type'], 'A')
 
     def test_api_can_query_diprel(self):
         """
