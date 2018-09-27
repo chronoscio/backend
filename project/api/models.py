@@ -9,8 +9,19 @@ from gm2m import GM2MField
 
 # Create your models here.
 
+class EntityManager(models.Manager):
+    """
+    Manager for the Nation model to handle lookups by url_id
+    """
+    def get_by_natural_key(self, url_id):
+        return self.get(url_id=url_id)
 
 class Entity(models.Model):
+    """
+    Cultural/governmental entity. Serves as foreign key for most Territories
+    """
+    objects = EntityManager()
+
     name = models.TextField(max_length=100,
                             help_text="Canonical name, should not include any epithets, must be unique",
                             unique=True)
@@ -18,6 +29,15 @@ class Entity(models.Model):
                               help_text="Identifier used to lookup Entities in the URL, "
                                         "should be kept short and must be unique",
                               unique=True)
+    color = ColorField(help_text="Color to display on map",
+                       unique=True,
+                       null=True,
+                       blank=True)
+    history = HistoricalRecords()
+
+    # Flavor fields
+
+    # required fields
     references = ArrayField(
         models.TextField(max_length=150),
     )
@@ -59,12 +79,15 @@ class PoliticalEntity(Entity):
         blank=True,
     )
 
-    #History fields
+    # History fields
 
     # Foreign key to auth.User which will be updated every time the model is changed,
     # and is this stored in history as the user to update a specific revision
     # Consider other metadata (DateTime) for the revision (may be handled by django-simple-history)
     # TODO: implement this
+
+    def natural_key(self):
+        return self.url_id
 
     def __str__(self):
         return self.name
@@ -96,7 +119,14 @@ class Territory(models.Model):
         if self.start_date > self.end_date:
             raise ValidationError("Start date cannot be later than end date")
         if loads(self.geo.json)["type"] != "Polygon" and loads(self.geo.json)["type"] != "MultiPolygon":
-            raise ValidationError("Only Polygon and MultiPolygon objects are acceptable geometry types")
+            raise ValidationError(
+                "Only Polygon and MultiPolygon objects are acceptable geometry types.")
+
+        # This date check is inculsive.
+        if Territory.objects.filter(start_date__lte=self.end_date, end_date__gte=self.start_date, nation__exact=self.nation).exists():
+            raise ValidationError(
+                "Another territory of this nation exists during this timeframe.")
+
         super(Territory, self).clean(*args, **kwargs)
 
     def save(self, *args, **kwargs):

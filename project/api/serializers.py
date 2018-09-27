@@ -2,11 +2,11 @@ from json import loads, dumps
 
 from django.contrib.auth.models import User
 from django.contrib.gis.geos import GEOSGeometry
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 
 from .models import PoliticalEntity, Territory, DiplomaticRelation
 
-class PoliticalEntitySerializer(ModelSerializer):
+class PoliticalEntitySerializer(serializers.ModelSerializer):
     """
     Serializes the PoliticalEntity model
     """
@@ -14,10 +14,15 @@ class PoliticalEntitySerializer(ModelSerializer):
         model = PoliticalEntity
         fields = '__all__'
 
-class TerritorySerializer(ModelSerializer):
+class TerritorySerializer(serializers.ModelSerializer):
     """
     Serializes the Territory model as GeoJSON compatible data
     """
+    nation = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='url_id'
+    )
+
     def to_internal_value(self, data):
         ret = {}
 
@@ -49,7 +54,7 @@ class TerritorySerializer(ModelSerializer):
         model = Territory
         fields = '__all__'
 
-class DiplomaticRelationSerializer(ModelSerializer):
+class DiplomaticRelationSerializer(serializers.ModelSerializer):
     """
     Serializes the DiplomaticRelation model
     """
