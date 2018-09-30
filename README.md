@@ -17,4 +17,4 @@ make run
 ```
 
 ## Contributing
-Please refer to the [developer guide](./DEVELOPER.md) and [contribution guide](./CONTRIBUTING.md) to learn how the backend is structured.
+Please refer to the [developer guide](./docs/DEVELOPER.md) and [contribution guide](./CONTRIBUTING.md) to learn how the backend is structured.
