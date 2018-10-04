@@ -5,18 +5,18 @@ from django.contrib.gis.db import models
 from django.contrib.postgres.fields import ArrayField
 from simple_history.models import HistoricalRecords
 from colorfield.fields import ColorField
-from gm2m import GM2MField
+from polymorphic.models import PolymorphicModel, PolymorphicManager
 
 # Create your models here.
 
-class EntityManager(models.Manager):
+class EntityManager(PolymorphicManager):
     """
     Manager for the Nation model to handle lookups by url_id
     """
     def get_by_natural_key(self, url_id):
         return self.get(url_id=url_id)
 
-class Entity(models.Model):
+class Entity(PolymorphicModel):
     """
     Cultural/governmental entity. Serves as foreign key for most Territories
     """
@@ -29,13 +29,7 @@ class Entity(models.Model):
                               help_text="Identifier used to lookup Entities in the URL, "
                                         "should be kept short and must be unique",
                               unique=True)
-    color = ColorField(help_text="Color to display on map",
-                       unique=True,
-                       null=True,
-                       blank=True)
     history = HistoricalRecords()
-
-    # Flavor fields
 
     # required fields
     references = ArrayField(
@@ -53,9 +47,11 @@ class Entity(models.Model):
         blank=True,
     )
 
-    class Meta:
-        abstract = True
+    def natural_key(self):
+        return self.url_id
 
+    def __str__(self):
+        return self.name
 
 class PoliticalEntity(Entity):
     """
@@ -86,12 +82,6 @@ class PoliticalEntity(Entity):
     # Consider other metadata (DateTime) for the revision (may be handled by django-simple-history)
     # TODO: implement this
 
-    def natural_key(self):
-        return self.url_id
-
-    def __str__(self):
-        return self.name
-
 
 class Territory(models.Model):
     """
@@ -109,7 +99,7 @@ class Territory(models.Model):
     #                            null=True,
     #                            blank=True
     #                            )
-    entity = GM2MField()
+    entity = models.ForeignKey(Entity, related_name='territories', on_delete=models.CASCADE)
     references = ArrayField(
         models.TextField(max_length=150),
     )

@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     'simple_history',
     'colorfield',
     'api',
-    'gm2m'
 ]
 
 MIDDLEWARE = [
