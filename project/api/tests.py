@@ -97,7 +97,7 @@ class ModelTest(TestCase):
         """
         Ensure that we can create territories. Specifically checks if we can create [start_date+1,end_date-1]
         """
-        politicalentity = PoliticalEntity.objects.get(url_id="test_Political$ntity")
+        politicalentity = PoliticalEntity.objects.get(url_id="test_PoliticalEntity")
         Territory.objects.create(start_date="0007-01-01",
                                  end_date="0008-01-01",
                                  politicalentity=politicalentity,
@@ -120,7 +120,7 @@ class ModelTest(TestCase):
         """
         Ensure that date checks work.
         """
-        new_politicalentity = PoliticalEntity.objects.get(url_id="test_politicalentity")
+        new_politicalentity = PoliticalEntity.objects.get(url_id="test_PoliticalEntity")
         with self.assertRaises(ValidationError):
             Territory.objects.create(start_date="0001-01-01",
                                      end_date="0003-01-01",
@@ -355,7 +355,7 @@ class APITest(APITestCase):
         url = reverse("territory-list")
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0]["entity"], test_politicalentity)
+        self.assertEqual(response.data[0]["entity"], 1)
 
     def test_api_can_query_diprels(self):
         """
@@ -375,7 +375,7 @@ class APITest(APITestCase):
             "?bounds=((0.0, 0.0), (0.0, 150.0), (150.0, 150.0), (150.0, 0.0), (0.0, 0.0))"
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0]["entity"], 'test_politicalentity')
+        self.assertEqual(response.data[0]["entity"], 1)
 
     def test_api_can_not_query_territories_bounds(self):
         """
@@ -395,7 +395,7 @@ class APITest(APITestCase):
         url = reverse("territory-list")+"?date=0001-01-01"
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0]["entity"], 'test_politicalentity')
+        self.assertEqual(response.data[0]["entity"], 1)
 
     def test_api_can_not_query_territories_date(self):
         """
@@ -423,7 +423,7 @@ class APITest(APITestCase):
         url = reverse("territory-detail", args=[1])
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["entity"], 'test_politicalentity')
+        self.assertEqual(response.data["entity"], 1)
 
     def test_api_can_query_diprel(self):
         """
