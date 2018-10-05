@@ -97,7 +97,7 @@ class ModelTest(TestCase):
         """
         Ensure that we can create territories. Specifically checks if we can create [start_date+1,end_date-1]
         """
-        politicalentity = PoliticalEntity.objects.get(url_id="test_politicalentity")
+        politicalentity = PoliticalEntity.objects.get(url_id="test_Political$ntity")
         Territory.objects.create(start_date="0007-01-01",
                                  end_date="0008-01-01",
                                  politicalentity=politicalentity,
@@ -106,7 +106,7 @@ class ModelTest(TestCase):
                                  geo=GEOSGeometry('{"type": "MultiPolygon","coordinates": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}'))
         self.assertTrue(Territory.objects.filter(
             politicalentity=politicalentity, start_date="0007-01-01", end_date="0008-01-01").exists())
-        politicalentity = PoliticalEntity.objects.get(url_id="test_politicalentity")
+        politicalentity = PoliticalEntity.objects.get(url_id="test_PoliticalEntity")
         Territory.objects.create(start_date="0004-01-02",
                                  end_date="0006-12-31",
                                  politicalentity=politicalentity,
@@ -217,7 +217,7 @@ class APITest(APITestCase):
         data = {
             "start_date": "0006-01-01",
             "end_date": "0007-01-01",
-            "PoliticalEntity": 1,
+            "entity": 'test_PoliticalEntity',
             'references': ["https://en.wikipedia.org/wiki/Test"],
             "geo": "{\"type\": \"MultiPolygon\",\"coordinates\": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}"
         }
@@ -227,7 +227,7 @@ class APITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Territory.objects.count(), 2)
         self.assertEqual(
-            Territory.objects.get(pk=2).PoliticalEntity,
+            Territory.objects.get(pk=2).entity,
             PoliticalEntity.objects.get(pk=1)
         )
 
@@ -266,7 +266,7 @@ class APITest(APITestCase):
         data = {
             "start_date": "0008-01-01",
             "end_date": "0009-01-01",
-            "PoliticalEntity": 1,
+            "entity": 'test_PoliticalEntity',
             'references': ["https://en.wikipedia.org/wiki/Test"],
             "geo": '{"type": "FeatureCollection","features": [{"type": "Feature","id": "id0","geometry": {"type": "Polygon","coordinates": [[[100,0],[101,0],[101,1],[100,1],[100,0]]]},"properties": {"prop0": "value0","prop1": "value1"}},{"type": "Feature","properties": {},"geometry": {"type": "Polygon","coordinates": [[[101.22802734375,-1.043643455908483],[102.601318359375,-2.2516174965491453],[102.864990234375,-0.36254640877525024],[101.22802734375,-1.043643455908483]]]}}]}'
         }
@@ -276,7 +276,7 @@ class APITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Territory.objects.count(), 2)
         self.assertEqual(
-            Territory.objects.get(pk=3).PoliticalEntity,
+            Territory.objects.get(pk=3).entity,
             PoliticalEntity.objects.get(pk=1)
         )
 
@@ -288,20 +288,20 @@ class APITest(APITestCase):
         data = {
             "start_date": "0010-01-01",
             "end_date": "0011-01-01",
-            "PoliticalEntity": 1,
+            "entity": 'test_PoliticalEntity',
             "geo": "{\"type\": \"MultiPolygon\",\"coordinates\": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}"
         }
         self.client.credentials(
             HTTP_AUTHORIZATION="Bearer " + getUserToken())
         response = self.client.put(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["PoliticalEntity"], 'test_politicalentity')
+        self.assertEqual(response.data["entity"], 'test_politicalentity')
 
     def test_api_can_update_PoliticalEntity(self):
         """
         Ensure we can update individual PoliticalEntitys
         """
-        url = reverse("PoliticalEntity-detail", args=["test_PoliticalEntity"])
+        url = reverse("politicalentity-detail", args=["test_PoliticalEntity"])
         data = {
             "name": "Created Test PoliticalEntity",
             "url_id": "created_test_PoliticalEntity",
@@ -343,7 +343,7 @@ class APITest(APITestCase):
         """
         Ensure we can query for all PoliticalEntitys
         """
-        url = reverse("PoliticalEntity-list")
+        url = reverse("politicalentity-list")
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[0]["name"], "Test PoliticalEntity")
@@ -355,7 +355,7 @@ class APITest(APITestCase):
         url = reverse("territory-list")
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0]["PoliticalEntity"], 'test_politicalentity')
+        self.assertEqual(response.data[0]["entity"], test_politicalentity)
 
     def test_api_can_query_diprels(self):
         """
@@ -375,7 +375,7 @@ class APITest(APITestCase):
             "?bounds=((0.0, 0.0), (0.0, 150.0), (150.0, 150.0), (150.0, 0.0), (0.0, 0.0))"
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0]["PoliticalEntity"], 'test_politicalentity')
+        self.assertEqual(response.data[0]["entity"], 'test_politicalentity')
 
     def test_api_can_not_query_territories_bounds(self):
         """
@@ -395,7 +395,7 @@ class APITest(APITestCase):
         url = reverse("territory-list")+"?date=0001-01-01"
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0]["PoliticalEntity"], 'test_politicalentity')
+        self.assertEqual(response.data[0]["entity"], 'test_politicalentity')
 
     def test_api_can_not_query_territories_date(self):
         """
@@ -411,7 +411,7 @@ class APITest(APITestCase):
         """
         Ensure we can query individual PoliticalEntitys
         """
-        url = reverse("PoliticalEntity-detail", args=["test_PoliticalEntity"])
+        url = reverse("politicalentity-detail", args=["test_PoliticalEntity"])
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["name"], "Test PoliticalEntity")
@@ -423,7 +423,7 @@ class APITest(APITestCase):
         url = reverse("territory-detail", args=[1])
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["PoliticalEntity"], 'test_politicalentity')
+        self.assertEqual(response.data["entity"], 'test_politicalentity')
 
     def test_api_can_query_diprel(self):
         """

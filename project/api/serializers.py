@@ -28,9 +28,9 @@ class TerritorySerializer(serializers.ModelSerializer):
 
         # Update ret to include passed in data
         for field, val in data.items():
-            if field == 'PoliticalEntity':
-                ret['PoliticalEntity'] = PoliticalEntity.objects.get(pk=val)
-            if field != 'geo' and field != 'PoliticalEntity':
+            if field == 'entity':
+                ret['entity'] = PoliticalEntity.objects.get(pk=val)
+            if field != 'geo' and field != 'entity':
                 ret[field] = val
 
         # Convert geo field to MultiPolygon if it is a FeatureCollection
