@@ -9,12 +9,14 @@ from polymorphic.models import PolymorphicModel, PolymorphicManager
 
 # Create your models here.
 
+
 class EntityManager(PolymorphicManager):
     """
     Manager for the Nation model to handle lookups by url_id
     """
     def get_by_natural_key(self, url_id):
         return self.get(url_id=url_id)
+
 
 class Entity(PolymorphicModel):
     """
@@ -52,6 +54,7 @@ class Entity(PolymorphicModel):
 
     def __str__(self):
         return self.name
+
 
 class PoliticalEntity(Entity):
     """
@@ -93,12 +96,6 @@ class Territory(models.Model):
     start_date = models.DateField(help_text="When this border takes effect")
     end_date = models.DateField(help_text="When this border ceases to exist")
     geo = models.GeometryField()
-    # entity = models.ForeignKey(Entity,
-    #                            related_name="territories",
-    #                            on_delete=models.CASCADE,
-    #                            null=True,
-    #                            blank=True
-    #                            )
     entity = models.ForeignKey(Entity, related_name='territories', on_delete=models.CASCADE)
     references = ArrayField(
         models.TextField(max_length=150),
