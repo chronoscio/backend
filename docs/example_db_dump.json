@@ -1,1 +1,298 @@
-[{"model": "auth.user", "pk": 1, "fields": {"password": "pbkdf2_sha256$100000$g8Ob56iGNKmg$zjQ9d12skRyM1FU98dZgfdkkBA5ZFZJh3Cxe51+IrNs=", "last_login": "2018-09-22T21:56:47.210Z", "is_superuser": true, "username": "admin", "first_name": "", "last_name": "", "email": "admin@example.com", "is_staff": true, "is_active": true, "date_joined": "2018-09-22T21:56:29.780Z", "groups": [], "user_permissions": []}}, {"model": "sessions.session", "pk": "a0s4l8accc3xrl6u7goumftn0wzqt34m", "fields": {"session_data": "MmJkMDQ0OWU0N2YyOGRlM2U0OGMzNzE2YjViOTI1NTBiOWFkZjcxOTp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJkNjBlODlkMDNlZjRhN2MxZWMyNmM2MDIyM2EyMmM0NGVkM2VmNDYxIn0=", "expire_date": "2018-10-06T21:56:47.216Z"}}, {"model": "api.historicalnation", "pk": 1, "fields": {"id": 1, "name": "Example Nation", "url_id": "test", "color": "#B647FF", "references": "[\"example.org\"]", "aliases": "[\"Test Nation\"]", "description": "Example nation for testing purposes.", "links": "[\"http://example.com\"]", "control_type": "CC", "history_change_reason": null, "history_date": "2018-09-22T21:57:42.998Z", "history_user": ["admin"], "history_type": "+"}}, {"model": "api.historicalnation", "pk": 2, "fields": {"id": 2, "name": "Example Nation #2", "url_id": "test2", "color": "#73A2FF", "references": "[\"example.org\"]", "aliases": "[\"Second Test Nation\"]", "description": "Second example nation for testing purposes.", "links": "[\"http://example.com\"]", "control_type": "CC", "history_change_reason": null, "history_date": "2018-09-22T21:59:27.742Z", "history_user": ["admin"], "history_type": "+"}}, {"model": "api.nation", "pk": 1, "fields": {"name": "Example Nation", "url_id": "test", "color": "#B647FF", "references": "[\"example.org\"]", "aliases": "[\"Test Nation\"]", "description": "Example nation for testing purposes.", "links": "[\"http://example.com\"]", "control_type": "CC"}}, {"model": "api.nation", "pk": 2, "fields": {"name": "Example Nation #2", "url_id": "test2", "color": "#73A2FF", "references": "[\"example.org\"]", "aliases": "[\"Second Test Nation\"]", "description": "Second example nation for testing purposes.", "links": "[\"http://example.com\"]", "control_type": "CC"}}, {"model": "api.historicalterritory", "pk": 1, "fields": {"id": 1, "start_date": "0001-01-01", "end_date": "0099-01-01", "geo": "SRID=4326;POLYGON ((-1.656630022397645 43.69482598408752, -4.205458147397642 48.38830605204422, 9.066026227602357 53.79021944962962, 14.25157310260236 45.7552023199822, 2.825791852602352 42.15031170420347, -1.656630022397645 43.69482598408752))", "references": "[\"example.org\"]", "nation": 1, "history_change_reason": null, "history_date": "2018-09-22T21:58:34.619Z", "history_user": ["admin"], "history_type": "+"}}, {"model": "api.historicalterritory", "pk": 2, "fields": {"id": 2, "start_date": "0050-01-01", "end_date": "0099-01-01", "geo": "SRID=4326;POLYGON ((-116.8032714520512 32.29630637529569, -124.1860839520512 48.26116632214011, -72.50639645205119 43.3650281791681, -79.88920895205119 23.45304491899555, -116.8032714520512 32.29630637529569))", "references": "[\"example.org\"]", "nation": 2, "history_change_reason": null, "history_date": "2018-09-22T22:09:08.542Z", "history_user": ["admin"], "history_type": "+"}}, {"model": "api.historicalterritory", "pk": 3, "fields": {"id": 3, "start_date": "2018-09-21", "end_date": "2018-09-22", "geo": "SRID=4326;POLYGON ((1.743034972226639 2.325248941633908, 11.93834747222664 11.04588383025013, 14.68363699428546 -3.735915574211872, 1.743034972226639 2.325248941633908))", "references": "[\"example.com\"]", "nation": 2, "history_change_reason": null, "history_date": "2018-09-22T22:11:17.198Z", "history_user": ["admin"], "history_type": "+"}}, {"model": "api.historicalterritory", "pk": 4, "fields": {"id": 3, "start_date": "2018-09-21", "end_date": "2018-09-22", "geo": "SRID=4326;POLYGON ((1.743034972226639 2.325248941633908, 11.93834747222664 11.04588383025013, 14.68363699428546 -3.735915574211872, 1.743034972226639 2.325248941633908))", "references": "[\"example.com\"]", "nation": 2, "history_change_reason": null, "history_date": "2018-09-22T22:11:25.091Z", "history_user": ["admin"], "history_type": "-"}}, {"model": "api.territory", "pk": 1, "fields": {"start_date": "0001-01-01", "end_date": "0099-01-01", "geo": "SRID=4326;POLYGON ((-1.656630022397645 43.69482598408752, -4.205458147397642 48.38830605204422, 9.066026227602357 53.79021944962962, 14.25157310260236 45.7552023199822, 2.825791852602352 42.15031170420347, -1.656630022397645 43.69482598408752))", "nation": 1, "references": "[\"example.org\"]"}}, {"model": "api.territory", "pk": 2, "fields": {"start_date": "0050-01-01", "end_date": "0099-01-01", "geo": "SRID=4326;POLYGON ((-116.8032714520512 32.29630637529569, -124.1860839520512 48.26116632214011, -72.50639645205119 43.3650281791681, -79.88920895205119 23.45304491899555, -116.8032714520512 32.29630637529569))", "nation": 2, "references": "[\"example.org\"]"}}, {"model": "api.historicaldiplomaticrelation", "pk": 1, "fields": {"id": 1, "start_date": "0001-01-01", "end_date": "0099-01-01", "diplo_type": "A", "references": "[\"example.org\"]", "history_change_reason": null, "history_date": "2018-09-22T22:41:26.255Z", "history_user": ["admin"], "history_type": "+"}}, {"model": "api.diplomaticrelation", "pk": 1, "fields": {"start_date": "0001-01-01", "end_date": "0099-01-01", "diplo_type": "A", "references": "[\"example.org\"]", "parent_parties": [1], "child_parties": [2]}}, {"model": "admin.logentry", "pk": 1, "fields": {"action_time": "2018-09-22T21:57:43.001Z", "user": ["admin"], "content_type": ["api", "nation"], "object_id": "1", "object_repr": "Example Nation", "action_flag": 1, "change_message": "[{\"added\": {}}]"}}, {"model": "admin.logentry", "pk": 2, "fields": {"action_time": "2018-09-22T21:58:34.622Z", "user": ["admin"], "content_type": ["api", "territory"], "object_id": "1", "object_repr": "Example Nation: 01/01/0001 - 01/01/0099", "action_flag": 1, "change_message": "[{\"added\": {}}]"}}, {"model": "admin.logentry", "pk": 3, "fields": {"action_time": "2018-09-22T21:59:27.744Z", "user": ["admin"], "content_type": ["api", "nation"], "object_id": "2", "object_repr": "Example Nation #2", "action_flag": 1, "change_message": "[{\"added\": {}}]"}}, {"model": "admin.logentry", "pk": 4, "fields": {"action_time": "2018-09-22T22:09:08.548Z", "user": ["admin"], "content_type": ["api", "territory"], "object_id": "2", "object_repr": "Example Nation #2: 01/01/0050 - 01/01/0099", "action_flag": 1, "change_message": "[{\"added\": {}}]"}}, {"model": "admin.logentry", "pk": 5, "fields": {"action_time": "2018-09-22T22:11:17.200Z", "user": ["admin"], "content_type": ["api", "territory"], "object_id": "3", "object_repr": "Example Nation #2: 09/21/2018 - 09/22/2018", "action_flag": 1, "change_message": "[{\"added\": {}}]"}}, {"model": "admin.logentry", "pk": 6, "fields": {"action_time": "2018-09-22T22:11:25.067Z", "user": ["admin"], "content_type": ["api", "territory"], "object_id": "3", "object_repr": "Example Nation #2: 09/21/2018 - 09/22/2018", "action_flag": 3, "change_message": ""}}, {"model": "admin.logentry", "pk": 7, "fields": {"action_time": "2018-09-22T22:41:26.279Z", "user": ["admin"], "content_type": ["api", "diplomaticrelation"], "object_id": "1", "object_repr": "Example Nation - Example Nation #2: 01/01/0001 - 01/01/0099", "action_flag": 1, "change_message": "[{\"added\": {}}]"}}]
+[
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$g8Ob56iGNKmg$zjQ9d12skRyM1FU98dZgfdkkBA5ZFZJh3Cxe51+IrNs=",
+      "last_login": "2018-09-22T21:56:47.210Z",
+      "is_superuser": true,
+      "username": "admin",
+      "first_name": "",
+      "last_name": "",
+      "email": "admin@example.com",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2018-09-22T21:56:29.780Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "sessions.session",
+    "pk": "a0s4l8accc3xrl6u7goumftn0wzqt34m",
+    "fields": {
+      "session_data": "MmJkMDQ0OWU0N2YyOGRlM2U0OGMzNzE2YjViOTI1NTBiOWFkZjcxOTp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJkNjBlODlkMDNlZjRhN2MxZWMyNmM2MDIyM2EyMmM0NGVkM2VmNDYxIn0=",
+      "expire_date": "2018-10-06T21:56:47.216Z"
+    }
+  },
+  {
+    "model": "api.historicalpoliticalentity",
+    "pk": 1,
+    "fields": {
+      "id": 1,
+      "name": "Example politicalentity",
+      "url_id": "test",
+      "color": "#B647FF",
+      "references": "[\"example.org\"]",
+      "aliases": "[\"Test politicalentity\"]",
+      "description": "Example politicalentity for testing purposes.",
+      "links": "[\"http://example.com\"]",
+      "control_type": "CC",
+      "history_change_reason": null,
+      "history_date": "2018-09-22T21:57:42.998Z",
+      "history_user": ["admin"],
+      "history_type": "+"
+    }
+  },
+  {
+    "model": "api.historicalpoliticalentity",
+    "pk": 2,
+    "fields": {
+      "id": 2,
+      "name": "Example politicalentity #2",
+      "url_id": "test2",
+      "color": "#73A2FF",
+      "references": "[\"example.org\"]",
+      "aliases": "[\"Second Test politicalentity\"]",
+      "description": "Second example politicalentity for testing purposes.",
+      "links": "[\"http://example.com\"]",
+      "control_type": "CC",
+      "history_change_reason": null,
+      "history_date": "2018-09-22T21:59:27.742Z",
+      "history_user": ["admin"],
+      "history_type": "+"
+    }
+  },
+  {
+    "model": "api.politicalentity",
+    "pk": 1,
+    "fields": {
+      "name": "Example politicalentity",
+      "url_id": "test",
+      "color": "#B647FF",
+      "references": "[\"example.org\"]",
+      "aliases": "[\"Test politicalentity\"]",
+      "description": "Example politicalentity for testing purposes.",
+      "links": "[\"http://example.com\"]",
+      "control_type": "CC"
+    }
+  },
+  {
+    "model": "api.politicalentity",
+    "pk": 2,
+    "fields": {
+      "name": "Example politicalentity #2",
+      "url_id": "test2",
+      "color": "#73A2FF",
+      "references": "[\"example.org\"]",
+      "aliases": "[\"Second Test politicalentity\"]",
+      "description": "Second example politicalentity for testing purposes.",
+      "links": "[\"http://example.com\"]",
+      "control_type": "CC"
+    }
+  },
+  {
+    "model": "api.historicalterritory",
+    "pk": 1,
+    "fields": {
+      "id": 1,
+      "start_date": "0001-01-01",
+      "end_date": "0099-01-01",
+      "geo": "SRID=4326;POLYGON ((-1.656630022397645 43.69482598408752, -4.205458147397642 48.38830605204422, 9.066026227602357 53.79021944962962, 14.25157310260236 45.7552023199822, 2.825791852602352 42.15031170420347, -1.656630022397645 43.69482598408752))",
+      "references": "[\"example.org\"]",
+      "politicalentity": 1,
+      "history_change_reason": null,
+      "history_date": "2018-09-22T21:58:34.619Z",
+      "history_user": ["admin"],
+      "history_type": "+"
+    }
+  },
+  {
+    "model": "api.historicalterritory",
+    "pk": 2,
+    "fields": {
+      "id": 2,
+      "start_date": "0050-01-01",
+      "end_date": "0099-01-01",
+      "geo": "SRID=4326;POLYGON ((-116.8032714520512 32.29630637529569, -124.1860839520512 48.26116632214011, -72.50639645205119 43.3650281791681, -79.88920895205119 23.45304491899555, -116.8032714520512 32.29630637529569))",
+      "references": "[\"example.org\"]",
+      "politicalentity": 2,
+      "history_change_reason": null,
+      "history_date": "2018-09-22T22:09:08.542Z",
+      "history_user": ["admin"],
+      "history_type": "+"
+    }
+  },
+  {
+    "model": "api.historicalterritory",
+    "pk": 3,
+    "fields": {
+      "id": 3,
+      "start_date": "2018-09-21",
+      "end_date": "2018-09-22",
+      "geo": "SRID=4326;POLYGON ((1.743034972226639 2.325248941633908, 11.93834747222664 11.04588383025013, 14.68363699428546 -3.735915574211872, 1.743034972226639 2.325248941633908))",
+      "references": "[\"example.com\"]",
+      "politicalentity": 2,
+      "history_change_reason": null,
+      "history_date": "2018-09-22T22:11:17.198Z",
+      "history_user": ["admin"],
+      "history_type": "+"
+    }
+  },
+  {
+    "model": "api.historicalterritory",
+    "pk": 4,
+    "fields": {
+      "id": 3,
+      "start_date": "2018-09-21",
+      "end_date": "2018-09-22",
+      "geo": "SRID=4326;POLYGON ((1.743034972226639 2.325248941633908, 11.93834747222664 11.04588383025013, 14.68363699428546 -3.735915574211872, 1.743034972226639 2.325248941633908))",
+      "references": "[\"example.com\"]",
+      "politicalentity": 2,
+      "history_change_reason": null,
+      "history_date": "2018-09-22T22:11:25.091Z",
+      "history_user": ["admin"],
+      "history_type": "-"
+    }
+  },
+  {
+    "model": "api.territory",
+    "pk": 1,
+    "fields": {
+      "start_date": "0001-01-01",
+      "end_date": "0099-01-01",
+      "geo": "SRID=4326;POLYGON ((-1.656630022397645 43.69482598408752, -4.205458147397642 48.38830605204422, 9.066026227602357 53.79021944962962, 14.25157310260236 45.7552023199822, 2.825791852602352 42.15031170420347, -1.656630022397645 43.69482598408752))",
+      "politicalentity": 1,
+      "references": "[\"example.org\"]"
+    }
+  },
+  {
+    "model": "api.territory",
+    "pk": 2,
+    "fields": {
+      "start_date": "0050-01-01",
+      "end_date": "0099-01-01",
+      "geo": "SRID=4326;POLYGON ((-116.8032714520512 32.29630637529569, -124.1860839520512 48.26116632214011, -72.50639645205119 43.3650281791681, -79.88920895205119 23.45304491899555, -116.8032714520512 32.29630637529569))",
+      "politicalentity": 2,
+      "references": "[\"example.org\"]"
+    }
+  },
+  {
+    "model": "api.historicaldiplomaticrelation",
+    "pk": 1,
+    "fields": {
+      "id": 1,
+      "start_date": "0001-01-01",
+      "end_date": "0099-01-01",
+      "diplo_type": "A",
+      "references": "[\"example.org\"]",
+      "history_change_reason": null,
+      "history_date": "2018-09-22T22:41:26.255Z",
+      "history_user": ["admin"],
+      "history_type": "+"
+    }
+  },
+  {
+    "model": "api.diplomaticrelation",
+    "pk": 1,
+    "fields": {
+      "start_date": "0001-01-01",
+      "end_date": "0099-01-01",
+      "diplo_type": "A",
+      "references": "[\"example.org\"]",
+      "parent_parties": [1],
+      "child_parties": [2]
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 1,
+    "fields": {
+      "action_time": "2018-09-22T21:57:43.001Z",
+      "user": ["admin"],
+      "content_type": ["api", "politicalentity"],
+      "object_id": "1",
+      "object_repr": "Example politicalentity",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 2,
+    "fields": {
+      "action_time": "2018-09-22T21:58:34.622Z",
+      "user": ["admin"],
+      "content_type": ["api", "territory"],
+      "object_id": "1",
+      "object_repr": "Example politicalentity: 01/01/0001 - 01/01/0099",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 3,
+    "fields": {
+      "action_time": "2018-09-22T21:59:27.744Z",
+      "user": ["admin"],
+      "content_type": ["api", "politicalentity"],
+      "object_id": "2",
+      "object_repr": "Example politicalentity #2",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 4,
+    "fields": {
+      "action_time": "2018-09-22T22:09:08.548Z",
+      "user": ["admin"],
+      "content_type": ["api", "territory"],
+      "object_id": "2",
+      "object_repr": "Example politicalentity #2: 01/01/0050 - 01/01/0099",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 5,
+    "fields": {
+      "action_time": "2018-09-22T22:11:17.200Z",
+      "user": ["admin"],
+      "content_type": ["api", "territory"],
+      "object_id": "3",
+      "object_repr": "Example politicalentity #2: 09/21/2018 - 09/22/2018",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 6,
+    "fields": {
+      "action_time": "2018-09-22T22:11:25.067Z",
+      "user": ["admin"],
+      "content_type": ["api", "territory"],
+      "object_id": "3",
+      "object_repr": "Example politicalentity #2: 09/21/2018 - 09/22/2018",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 7,
+    "fields": {
+      "action_time": "2018-09-22T22:41:26.279Z",
+      "user": ["admin"],
+      "content_type": ["api", "diplomaticrelation"],
+      "object_id": "1",
+      "object_repr": "Example politicalentity - Example politicalentity #2: 01/01/0001 - 01/01/0099",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  }
+]
