@@ -13,8 +13,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 import json
 import re
-from six.moves.urllib import request
 
+from six.moves.urllib import request
 from cryptography.x509 import load_pem_x509_certificate
 from cryptography.hazmat.backends import default_backend
 
@@ -164,8 +164,6 @@ CORS_ORIGIN_WHITELIST = (
 
 AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN', 'chronoscio.auth0.com')
 API_IDENTIFIER = os.environ.get('API_IDENTIFIER', 'https://chronoscio.org/')
-AUTH0_CLIENT_ID = os.environ.get('AUTH0_CLIENT_ID', '')
-AUTH0_CLIENT_SECRET = os.environ.get('AUTH0_CLIENT_SECRET', '')
 PUBLIC_KEY = None
 JWT_ISSUER = None
 
