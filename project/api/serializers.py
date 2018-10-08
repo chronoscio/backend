@@ -6,6 +6,7 @@ from rest_framework import serializers
 
 from .models import PoliticalEntity, Territory, DiplomaticRelation
 
+
 class PoliticalEntitySerializer(serializers.ModelSerializer):
     """
     Serializes the PoliticalEntity model
@@ -13,6 +14,7 @@ class PoliticalEntitySerializer(serializers.ModelSerializer):
     class Meta:
         model = PoliticalEntity
         fields = '__all__'
+
 
 class TerritorySerializer(serializers.ModelSerializer):
     """
