@@ -46,12 +46,14 @@ class Nation(models.Model):
         models.TextField(max_length=100),
         help_text="Alternative names this state may be known by",
         blank=True,
+        null=True,
     )
     description = models.TextField(help_text="Flavor text, brief history, etc.",
                                    blank=True)
     links = ArrayField(
         models.URLField(),
         blank=True,
+        null=True,
     )
     CONTROL_TYPE_CHOICES = (
         ("CC", "Complete Control"),
