@@ -396,7 +396,7 @@ class APITest(APITestCase):
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["name"], "Test Nation")
-        
+
     def test_api_can_query_territories_exclude(self):
         """
         Ensure we can exclude territories by id
