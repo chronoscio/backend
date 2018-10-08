@@ -13,7 +13,7 @@ class PoliticalEntitySerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = PoliticalEntity
-        fields = '__all__'
+        exclude = ('polymorphic_ctype',)
 
 
 class TerritorySerializer(serializers.ModelSerializer):
@@ -55,6 +55,8 @@ class TerritorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Territory
         fields = '__all__'
+        depth = 1
+
 
 class DiplomaticRelationSerializer(serializers.ModelSerializer):
     """
@@ -63,3 +65,4 @@ class DiplomaticRelationSerializer(serializers.ModelSerializer):
     class Meta:
         model = DiplomaticRelation
         fields = '__all__'
+        depth = 1

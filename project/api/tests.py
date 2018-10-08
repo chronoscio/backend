@@ -281,7 +281,7 @@ class APITest(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Bearer " + getUserToken())
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["entity"], 1)
+        self.assertEqual(response.data["entity"]["id"], 1)
 
     def test_api_can_update_PoliticalEntity(self):
         """
@@ -332,7 +332,7 @@ class APITest(APITestCase):
         url = reverse("territory-list")
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0]["entity"], 1)
+        self.assertEqual(response.data[0]["entity"]["id"], 1)
 
     def test_api_can_query_territory(self):
         """
@@ -341,7 +341,7 @@ class APITest(APITestCase):
         url = reverse("territory-detail", args=[1])
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["entity"], 1)
+        self.assertEqual(response.data["entity"]["id"], 1)
 
     def test_api_can_query_territories_bounds(self):
         """
@@ -354,7 +354,7 @@ class APITest(APITestCase):
         )
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0]["entity"], 1)
+        self.assertEqual(response.data[0]["entity"]["id"], 1)
 
     def test_api_can_not_query_territories_bounds(self):
         """
@@ -376,7 +376,7 @@ class APITest(APITestCase):
         url = reverse("territory-list") + "?date=0001-01-01"
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0]["entity"], 1)
+        self.assertEqual(response.data[0]["entity"]["id"], 1)
 
     def test_api_can_not_query_territories_date(self):
         """
