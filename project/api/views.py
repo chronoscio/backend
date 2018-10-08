@@ -1,5 +1,3 @@
-from ast import literal_eval as make_tuple
-from django.contrib.gis.geos import Polygon
 from rest_framework import viewsets, permissions
 
 from .models import Nation, Territory, DiplomaticRelation
