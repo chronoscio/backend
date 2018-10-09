@@ -261,7 +261,7 @@ class APITest(APITestCase):
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Territory.objects.count(), 3)
-        self.assertEqual(Territory.objects.last().nation, self.new_nation)
+        self.assertEqual(Territory.objects.last().entity, self.new_nation)
 
     def test_api_can_create_territory(self):
         """
@@ -296,7 +296,7 @@ class APITest(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Bearer " + getUserToken())
         response = self.client.put(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["name"], self.child_nation.name)
+        self.assertEqual(response.data["name"], "Created Test Nation")
 
     def test_api_can_update_territory(self):
         """
