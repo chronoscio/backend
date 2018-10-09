@@ -61,8 +61,7 @@ class Nation(models.Model):
     control_type = models.TextField(
         max_length=2,
         choices=CONTROL_TYPE_CHOICES,
-        default="CC",
-        blank=True,
+        default="CC"
     )
 
     # History fields
