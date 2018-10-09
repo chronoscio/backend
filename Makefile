@@ -36,11 +36,14 @@ exec_debug: ## Runs built-in Django web server
 test: ## Builds, starts, and runs containers, running the django tests
 	docker-compose run --service-ports web sh init.sh python manage.py test
 
-exec_test: ## Builds, starts, and runs containers, running the django tests
+exec_test: ## Executes django tests in a running container
 	docker-compose exec web python manage.py test
 
 testk: ## Run Django tests, keeping the database schema from the previous test run
 	docker-compose run web python manage.py test -k
+
+exec_testk: ## Executes django tests in a running container
+	docker-compose exec web python manage.py test -k
 
 bash: ## SSH into the docker container
 	docker-compose run web /bin/bash
