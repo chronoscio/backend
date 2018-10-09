@@ -10,8 +10,13 @@ password = sys.argv[5]
 
 while True:
     try:
-        conn = psycopg2.connect(host=host, port=port, dbname=dbname, user=user, password=password)
+        conn = psycopg2.connect(
+            host=host,
+            port=port,
+            dbname=dbname,
+            user=user,
+            password=password)
         conn.close()
         break
-    except:
+    except BaseException:
         time.sleep(1)

@@ -14,6 +14,7 @@ class EntityManager(PolymorphicManager):
     """
     Manager for the Nation model to handle lookups by url_id
     """
+
     def get_by_natural_key(self, url_id):
         return self.get(url_id=url_id)
 
@@ -24,13 +25,15 @@ class Entity(PolymorphicModel):
     """
     objects = EntityManager()
 
-    name = models.TextField(max_length=100,
-                            help_text="Canonical name, should not include any epithets, must be unique",
-                            unique=True)
-    url_id = models.SlugField(max_length=75,
-                              help_text="Identifier used to lookup Entities in the URL, "
-                                        "should be kept short and must be unique",
-                              unique=True)
+    name = models.TextField(
+        max_length=100,
+        help_text="Canonical name, should not include any epithets, must be unique",
+        unique=True)
+    url_id = models.SlugField(
+        max_length=75,
+        help_text="Identifier used to lookup Entities in the URL, "
+        "should be kept short and must be unique",
+        unique=True)
     history = HistoricalRecords()
 
     # required fields
@@ -41,8 +44,8 @@ class Entity(PolymorphicModel):
         models.URLField(),
         blank=True,
     )
-    description = models.TextField(help_text="Flavor text, brief history, etc.",
-                                   blank=True)
+    description = models.TextField(
+        help_text="Flavor text, brief history, etc.", blank=True)
     aliases = ArrayField(
         models.TextField(max_length=100),
         help_text="Alternative names this state may be known by",
@@ -96,7 +99,10 @@ class Territory(models.Model):
     start_date = models.DateField(help_text="When this border takes effect")
     end_date = models.DateField(help_text="When this border ceases to exist")
     geo = models.GeometryField()
-    entity = models.ForeignKey(Entity, related_name='territories', on_delete=models.CASCADE)
+    entity = models.ForeignKey(
+        Entity,
+        related_name='territories',
+        on_delete=models.CASCADE)
     references = ArrayField(
         models.TextField(max_length=150),
     )
@@ -105,12 +111,16 @@ class Territory(models.Model):
     def clean(self, *args, **kwargs):
         if self.start_date > self.end_date:
             raise ValidationError("Start date cannot be later than end date")
-        if loads(self.geo.json)["type"] != "Polygon" and loads(self.geo.json)["type"] != "MultiPolygon":
+        if loads(self.geo.json)["type"] != "Polygon" and loads(
+                self.geo.json)["type"] != "MultiPolygon":
             raise ValidationError(
                 "Only Polygon and MultiPolygon objects are acceptable geometry types.")
 
         # This date check is inculsive.
-        if Territory.objects.filter(start_date__lte=self.end_date, end_date__gte=self.start_date, entity__exact=self.entity).exists():
+        if Territory.objects.filter(
+                start_date__lte=self.end_date,
+                end_date__gte=self.start_date,
+                entity__exact=self.entity).exists():
             raise ValidationError(
                 "Another territory of this PoliticalEntity exists during this timeframe.")
 
@@ -132,8 +142,10 @@ class DiplomaticRelation(models.Model):
     """
     start_date = models.DateField(help_text="When this relation takes effect")
     end_date = models.DateField(help_text="When this relation ceases to exist")
-    parent_parties = models.ManyToManyField(PoliticalEntity, related_name='parent_parties')
-    child_parties = models.ManyToManyField(PoliticalEntity, related_name='child_parties')
+    parent_parties = models.ManyToManyField(
+        PoliticalEntity, related_name='parent_parties')
+    child_parties = models.ManyToManyField(
+        PoliticalEntity, related_name='child_parties')
     DIPLO_TYPE_CHOICES = (
         ("A", "Military Alliance"),
         ("D", "Dual Monarchy"),

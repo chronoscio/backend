@@ -19,14 +19,40 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Entity',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.TextField(help_text='Canonical name, should not include any epithets, must be unique', max_length=100, unique=True)),
-                ('url_id', models.SlugField(help_text='Identifier used to lookup Entities in the URL, should be kept short and must be unique', max_length=75, unique=True)),
-                ('references', django.contrib.postgres.fields.ArrayField(base_field=models.TextField(max_length=150), size=None)),
-                ('links', django.contrib.postgres.fields.ArrayField(base_field=models.URLField(), blank=True, size=None)),
-                ('description', models.TextField(blank=True, help_text='Flavor text, brief history, etc.')),
-                ('aliases', django.contrib.postgres.fields.ArrayField(base_field=models.TextField(max_length=100), blank=True, help_text='Alternative names this state may be known by', size=None)),
-                ('polymorphic_ctype', models.ForeignKey(editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='polymorphic_api.entity_set+', to='contenttypes.ContentType')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'name',
+                    models.TextField(
+                        help_text='Canonical name, should not include any epithets, must be unique',
+                        max_length=100,
+                        unique=True)),
+                (
+                    'url_id',
+                    models.SlugField(
+                        help_text='Identifier used to lookup Entities in the URL, should be kept short and must be unique',
+                        max_length=75,
+                        unique=True)),
+                ('references', django.contrib.postgres.fields.ArrayField(
+                    base_field=models.TextField(max_length=150), size=None)),
+                ('links', django.contrib.postgres.fields.ArrayField(
+                    base_field=models.URLField(), blank=True, size=None)),
+                ('description', models.TextField(blank=True,
+                                                 help_text='Flavor text, brief history, etc.')),
+                (
+                    'aliases',
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=models.TextField(
+                            max_length=100),
+                        blank=True,
+                        help_text='Alternative names this state may be known by',
+                        size=None)),
+                ('polymorphic_ctype',
+                 models.ForeignKey(editable=False,
+                                   null=True,
+                                   on_delete=django.db.models.deletion.CASCADE,
+                                   related_name='polymorphic_api.entity_set+',
+                                   to='contenttypes.ContentType')),
             ],
             options={
                 'abstract': False,
@@ -36,19 +62,49 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='HistoricalEntity',
             fields=[
-                ('id', models.IntegerField(auto_created=True, blank=True, db_index=True, verbose_name='ID')),
-                ('name', models.TextField(db_index=True, help_text='Canonical name, should not include any epithets, must be unique', max_length=100)),
-                ('url_id', models.SlugField(help_text='Identifier used to lookup Entities in the URL, should be kept short and must be unique', max_length=75)),
-                ('references', django.contrib.postgres.fields.ArrayField(base_field=models.TextField(max_length=150), size=None)),
-                ('links', django.contrib.postgres.fields.ArrayField(base_field=models.URLField(), blank=True, size=None)),
-                ('description', models.TextField(blank=True, help_text='Flavor text, brief history, etc.')),
-                ('aliases', django.contrib.postgres.fields.ArrayField(base_field=models.TextField(max_length=100), blank=True, help_text='Alternative names this state may be known by', size=None)),
+                ('id', models.IntegerField(auto_created=True,
+                                           blank=True, db_index=True, verbose_name='ID')),
+                ('name',
+                 models.TextField(db_index=True,
+                                  help_text='Canonical name, should not include any epithets, must be unique',
+                                  max_length=100)),
+                (
+                    'url_id',
+                    models.SlugField(
+                        help_text='Identifier used to lookup Entities in the URL, should be kept short and must be unique',
+                        max_length=75)),
+                ('references', django.contrib.postgres.fields.ArrayField(
+                    base_field=models.TextField(max_length=150), size=None)),
+                ('links', django.contrib.postgres.fields.ArrayField(
+                    base_field=models.URLField(), blank=True, size=None)),
+                ('description', models.TextField(blank=True,
+                                                 help_text='Flavor text, brief history, etc.')),
+                (
+                    'aliases',
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=models.TextField(
+                            max_length=100),
+                        blank=True,
+                        help_text='Alternative names this state may be known by',
+                        size=None)),
                 ('history_id', models.AutoField(primary_key=True, serialize=False)),
-                ('history_change_reason', models.CharField(max_length=100, null=True)),
+                ('history_change_reason', models.CharField(
+                    max_length=100, null=True)),
                 ('history_date', models.DateTimeField()),
-                ('history_type', models.CharField(choices=[('+', 'Created'), ('~', 'Changed'), ('-', 'Deleted')], max_length=1)),
-                ('history_user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL)),
-                ('polymorphic_ctype', models.ForeignKey(blank=True, db_constraint=False, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', to='contenttypes.ContentType')),
+                ('history_type', models.CharField(choices=[
+                 ('+', 'Created'), ('~', 'Changed'), ('-', 'Deleted')], max_length=1)),
+                ('history_user',
+                 models.ForeignKey(null=True,
+                                   on_delete=django.db.models.deletion.SET_NULL,
+                                   related_name='+',
+                                   to=settings.AUTH_USER_MODEL)),
+                ('polymorphic_ctype',
+                 models.ForeignKey(blank=True,
+                                   db_constraint=False,
+                                   null=True,
+                                   on_delete=django.db.models.deletion.DO_NOTHING,
+                                   related_name='+',
+                                   to='contenttypes.ContentType')),
             ],
             options={
                 'verbose_name': 'historical entity',
@@ -92,28 +148,57 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='historicalpoliticalentity',
             name='polymorphic_ctype',
-            field=models.ForeignKey(blank=True, db_constraint=False, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', to='contenttypes.ContentType'),
+            field=models.ForeignKey(
+                blank=True,
+                db_constraint=False,
+                null=True,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                related_name='+',
+                to='contenttypes.ContentType'),
         ),
         migrations.AddField(
             model_name='historicalpoliticalentity',
             name='entity_ptr',
-            field=models.ForeignKey(blank=True, db_constraint=False, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', to='api.Entity'),
+            field=models.ForeignKey(
+                blank=True,
+                db_constraint=False,
+                null=True,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                related_name='+',
+                to='api.Entity'),
         ),
         migrations.AddField(
             model_name='historicalterritory',
             name='entity',
-            field=models.ForeignKey(blank=True, db_constraint=False, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', to='api.Entity'),
+            field=models.ForeignKey(
+                blank=True,
+                db_constraint=False,
+                null=True,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                related_name='+',
+                to='api.Entity'),
         ),
         migrations.AddField(
             model_name='politicalentity',
             name='entity_ptr',
-            field=models.OneToOneField(auto_created=True, default=1, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='api.Entity'),
+            field=models.OneToOneField(
+                auto_created=True,
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                parent_link=True,
+                primary_key=True,
+                serialize=False,
+                to='api.Entity'),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='territory',
             name='entity',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, related_name='territories', to='api.Entity'),
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='territories',
+                to='api.Entity'),
             preserve_default=False,
         ),
     ]

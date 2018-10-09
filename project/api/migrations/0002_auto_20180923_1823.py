@@ -22,11 +22,16 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='historicalpoliticalentity',
             name='url_id',
-            field=models.SlugField(help_text='Identifier used to lookup Entities in the URL, should be kept short and must be unique', max_length=75),
+            field=models.SlugField(
+                help_text='Identifier used to lookup Entities in the URL, should be kept short and must be unique',
+                max_length=75),
         ),
         migrations.AlterField(
             model_name='politicalentity',
             name='url_id',
-            field=models.SlugField(help_text='Identifier used to lookup Entities in the URL, should be kept short and must be unique', max_length=75, unique=True),
+            field=models.SlugField(
+                help_text='Identifier used to lookup Entities in the URL, should be kept short and must be unique',
+                max_length=75,
+                unique=True),
         ),
     ]

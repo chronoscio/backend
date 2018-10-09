@@ -44,7 +44,8 @@ class TerritorySerializer(serializers.ModelSerializer):
 
             for feature in features:
                 if feature['geometry']['type'] == 'Polygon':
-                    features_union = features_union.union(GEOSGeometry(dumps(feature['geometry'])))
+                    features_union = features_union.union(
+                        GEOSGeometry(dumps(feature['geometry'])))
 
             ret['geo'] = features_union
         else:

@@ -21,26 +21,90 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='DiplomaticRelation',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('start_date', models.DateField(help_text='When this relation takes effect')),
-                ('end_date', models.DateField(help_text='When this relation ceases to exist')),
-                ('diplo_type', models.TextField(choices=[('A', 'Military Alliance'), ('D', 'Dual Monarchy'), ('M', 'Condominium'), ('T', 'Trade League'), ('W', 'At War'), ('P', 'State or Province'), ('CP', 'Client State - Puppet State'), ('CV', 'Client State - Vassal State'), ('CPU', 'Client State - Personal Union'), ('CCR', 'Client State - Colony - Royal'), ('CCP', 'Client State - Colony - Propreitary'), ('CCC', 'Client State - Colony - Charter')], max_length=3)),
-                ('references', django.contrib.postgres.fields.ArrayField(base_field=models.TextField(max_length=150), size=None)),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
+                ('start_date', models.DateField(
+                    help_text='When this relation takes effect')),
+                ('end_date', models.DateField(
+                    help_text='When this relation ceases to exist')),
+                ('diplo_type',
+                 models.TextField(choices=[('A',
+                                            'Military Alliance'),
+                                           ('D',
+                                            'Dual Monarchy'),
+                                           ('M',
+                                            'Condominium'),
+                                           ('T',
+                                            'Trade League'),
+                                           ('W',
+                                            'At War'),
+                                           ('P',
+                                            'State or Province'),
+                                           ('CP',
+                                            'Client State - Puppet State'),
+                                           ('CV',
+                                            'Client State - Vassal State'),
+                                           ('CPU',
+                                            'Client State - Personal Union'),
+                                           ('CCR',
+                                            'Client State - Colony - Royal'),
+                                           ('CCP',
+                                            'Client State - Colony - Propreitary'),
+                                           ('CCC',
+                                            'Client State - Colony - Charter')],
+                                  max_length=3)),
+                ('references', django.contrib.postgres.fields.ArrayField(
+                    base_field=models.TextField(max_length=150), size=None)),
             ],
         ),
         migrations.CreateModel(
             name='HistoricalDiplomaticRelation',
             fields=[
-                ('id', models.IntegerField(auto_created=True, blank=True, db_index=True, verbose_name='ID')),
-                ('start_date', models.DateField(help_text='When this relation takes effect')),
-                ('end_date', models.DateField(help_text='When this relation ceases to exist')),
-                ('diplo_type', models.TextField(choices=[('A', 'Military Alliance'), ('D', 'Dual Monarchy'), ('M', 'Condominium'), ('T', 'Trade League'), ('W', 'At War'), ('P', 'State or Province'), ('CP', 'Client State - Puppet State'), ('CV', 'Client State - Vassal State'), ('CPU', 'Client State - Personal Union'), ('CCR', 'Client State - Colony - Royal'), ('CCP', 'Client State - Colony - Propreitary'), ('CCC', 'Client State - Colony - Charter')], max_length=3)),
-                ('references', django.contrib.postgres.fields.ArrayField(base_field=models.TextField(max_length=150), size=None)),
+                ('id', models.IntegerField(auto_created=True,
+                                           blank=True, db_index=True, verbose_name='ID')),
+                ('start_date', models.DateField(
+                    help_text='When this relation takes effect')),
+                ('end_date', models.DateField(
+                    help_text='When this relation ceases to exist')),
+                ('diplo_type',
+                 models.TextField(choices=[('A',
+                                            'Military Alliance'),
+                                           ('D',
+                                            'Dual Monarchy'),
+                                           ('M',
+                                            'Condominium'),
+                                           ('T',
+                                            'Trade League'),
+                                           ('W',
+                                            'At War'),
+                                           ('P',
+                                            'State or Province'),
+                                           ('CP',
+                                            'Client State - Puppet State'),
+                                           ('CV',
+                                            'Client State - Vassal State'),
+                                           ('CPU',
+                                            'Client State - Personal Union'),
+                                           ('CCR',
+                                            'Client State - Colony - Royal'),
+                                           ('CCP',
+                                            'Client State - Colony - Propreitary'),
+                                           ('CCC',
+                                            'Client State - Colony - Charter')],
+                                  max_length=3)),
+                ('references', django.contrib.postgres.fields.ArrayField(
+                    base_field=models.TextField(max_length=150), size=None)),
                 ('history_id', models.AutoField(primary_key=True, serialize=False)),
-                ('history_change_reason', models.CharField(max_length=100, null=True)),
+                ('history_change_reason', models.CharField(
+                    max_length=100, null=True)),
                 ('history_date', models.DateTimeField()),
-                ('history_type', models.CharField(choices=[('+', 'Created'), ('~', 'Changed'), ('-', 'Deleted')], max_length=1)),
-                ('history_user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL)),
+                ('history_type', models.CharField(choices=[
+                 ('+', 'Created'), ('~', 'Changed'), ('-', 'Deleted')], max_length=1)),
+                ('history_user',
+                 models.ForeignKey(null=True,
+                                   on_delete=django.db.models.deletion.SET_NULL,
+                                   related_name='+',
+                                   to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'verbose_name': 'historical diplomatic relation',
@@ -52,20 +116,46 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='HistoricalPoliticalEntity',
             fields=[
-                ('id', models.IntegerField(auto_created=True, blank=True, db_index=True, verbose_name='ID')),
-                ('name', models.TextField(db_index=True, help_text='Canonical name, should not include any epithets, must be unique', max_length=100)),
-                ('url_id', models.SlugField(help_text='Identifier used to lookup PoliticalEntitys in the URL, should be kept short and must be unique', max_length=75)),
-                ('references', django.contrib.postgres.fields.ArrayField(base_field=models.TextField(max_length=150), size=None)),
-                ('links', django.contrib.postgres.fields.ArrayField(base_field=models.URLField(), blank=True, size=None)),
-                ('description', models.TextField(blank=True, help_text='Flavor text, brief history, etc.')),
-                ('aliases', django.contrib.postgres.fields.ArrayField(base_field=models.TextField(max_length=100), blank=True, help_text='Alternative names this state may be known by', size=None)),
-                ('color', colorfield.fields.ColorField(blank=True, db_index=True, help_text='Color to display on map', max_length=18, null=True)),
-                ('control_type', models.TextField(blank=True, choices=[('CC', 'Complete Control'), ('DT', 'Disputed Territory')], default='CC', max_length=2)),
+                ('id', models.IntegerField(auto_created=True,
+                                           blank=True, db_index=True, verbose_name='ID')),
+                ('name',
+                 models.TextField(db_index=True,
+                                  help_text='Canonical name, should not include any epithets, must be unique',
+                                  max_length=100)),
+                (
+                    'url_id',
+                    models.SlugField(
+                        help_text='Identifier used to lookup PoliticalEntitys in the URL, should be kept short and must be unique',
+                        max_length=75)),
+                ('references', django.contrib.postgres.fields.ArrayField(
+                    base_field=models.TextField(max_length=150), size=None)),
+                ('links', django.contrib.postgres.fields.ArrayField(
+                    base_field=models.URLField(), blank=True, size=None)),
+                ('description', models.TextField(blank=True,
+                                                 help_text='Flavor text, brief history, etc.')),
+                (
+                    'aliases',
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=models.TextField(
+                            max_length=100),
+                        blank=True,
+                        help_text='Alternative names this state may be known by',
+                        size=None)),
+                ('color', colorfield.fields.ColorField(blank=True, db_index=True,
+                                                       help_text='Color to display on map', max_length=18, null=True)),
+                ('control_type', models.TextField(blank=True, choices=[
+                 ('CC', 'Complete Control'), ('DT', 'Disputed Territory')], default='CC', max_length=2)),
                 ('history_id', models.AutoField(primary_key=True, serialize=False)),
-                ('history_change_reason', models.CharField(max_length=100, null=True)),
+                ('history_change_reason', models.CharField(
+                    max_length=100, null=True)),
                 ('history_date', models.DateTimeField()),
-                ('history_type', models.CharField(choices=[('+', 'Created'), ('~', 'Changed'), ('-', 'Deleted')], max_length=1)),
-                ('history_user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL)),
+                ('history_type', models.CharField(choices=[
+                 ('+', 'Created'), ('~', 'Changed'), ('-', 'Deleted')], max_length=1)),
+                ('history_user',
+                 models.ForeignKey(null=True,
+                                   on_delete=django.db.models.deletion.SET_NULL,
+                                   related_name='+',
+                                   to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'verbose_name': 'historical political entity',
@@ -77,16 +167,26 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='HistoricalTerritory',
             fields=[
-                ('id', models.IntegerField(auto_created=True, blank=True, db_index=True, verbose_name='ID')),
-                ('start_date', models.DateField(help_text='When this border takes effect')),
-                ('end_date', models.DateField(help_text='When this border ceases to exist')),
+                ('id', models.IntegerField(auto_created=True,
+                                           blank=True, db_index=True, verbose_name='ID')),
+                ('start_date', models.DateField(
+                    help_text='When this border takes effect')),
+                ('end_date', models.DateField(
+                    help_text='When this border ceases to exist')),
                 ('geo', django.contrib.gis.db.models.fields.GeometryField(srid=4326)),
-                ('references', django.contrib.postgres.fields.ArrayField(base_field=models.TextField(max_length=150), size=None)),
+                ('references', django.contrib.postgres.fields.ArrayField(
+                    base_field=models.TextField(max_length=150), size=None)),
                 ('history_id', models.AutoField(primary_key=True, serialize=False)),
-                ('history_change_reason', models.CharField(max_length=100, null=True)),
+                ('history_change_reason', models.CharField(
+                    max_length=100, null=True)),
                 ('history_date', models.DateTimeField()),
-                ('history_type', models.CharField(choices=[('+', 'Created'), ('~', 'Changed'), ('-', 'Deleted')], max_length=1)),
-                ('history_user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL)),
+                ('history_type', models.CharField(choices=[
+                 ('+', 'Created'), ('~', 'Changed'), ('-', 'Deleted')], max_length=1)),
+                ('history_user',
+                 models.ForeignKey(null=True,
+                                   on_delete=django.db.models.deletion.SET_NULL,
+                                   related_name='+',
+                                   to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'verbose_name': 'historical territory',
@@ -98,15 +198,42 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='PoliticalEntity',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.TextField(help_text='Canonical name, should not include any epithets, must be unique', max_length=100, unique=True)),
-                ('url_id', models.SlugField(help_text='Identifier used to lookup PoliticalEntitys in the URL, should be kept short and must be unique', max_length=75, unique=True)),
-                ('references', django.contrib.postgres.fields.ArrayField(base_field=models.TextField(max_length=150), size=None)),
-                ('links', django.contrib.postgres.fields.ArrayField(base_field=models.URLField(), blank=True, size=None)),
-                ('description', models.TextField(blank=True, help_text='Flavor text, brief history, etc.')),
-                ('aliases', django.contrib.postgres.fields.ArrayField(base_field=models.TextField(max_length=100), blank=True, help_text='Alternative names this state may be known by', size=None)),
-                ('color', colorfield.fields.ColorField(blank=True, help_text='Color to display on map', max_length=18, null=True, unique=True)),
-                ('control_type', models.TextField(blank=True, choices=[('CC', 'Complete Control'), ('DT', 'Disputed Territory')], default='CC', max_length=2)),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'name',
+                    models.TextField(
+                        help_text='Canonical name, should not include any epithets, must be unique',
+                        max_length=100,
+                        unique=True)),
+                (
+                    'url_id',
+                    models.SlugField(
+                        help_text='Identifier used to lookup PoliticalEntitys in the URL, should be kept short and must be unique',
+                        max_length=75,
+                        unique=True)),
+                ('references', django.contrib.postgres.fields.ArrayField(
+                    base_field=models.TextField(max_length=150), size=None)),
+                ('links', django.contrib.postgres.fields.ArrayField(
+                    base_field=models.URLField(), blank=True, size=None)),
+                ('description', models.TextField(blank=True,
+                                                 help_text='Flavor text, brief history, etc.')),
+                (
+                    'aliases',
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=models.TextField(
+                            max_length=100),
+                        blank=True,
+                        help_text='Alternative names this state may be known by',
+                        size=None)),
+                ('color',
+                 colorfield.fields.ColorField(blank=True,
+                                              help_text='Color to display on map',
+                                              max_length=18,
+                                              null=True,
+                                              unique=True)),
+                ('control_type', models.TextField(blank=True, choices=[
+                 ('CC', 'Complete Control'), ('DT', 'Disputed Territory')], default='CC', max_length=2)),
             ],
             options={
                 'abstract': False,
@@ -115,12 +242,21 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Territory',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('start_date', models.DateField(help_text='When this border takes effect')),
-                ('end_date', models.DateField(help_text='When this border ceases to exist')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
+                ('start_date', models.DateField(
+                    help_text='When this border takes effect')),
+                ('end_date', models.DateField(
+                    help_text='When this border ceases to exist')),
                 ('geo', django.contrib.gis.db.models.fields.GeometryField(srid=4326)),
-                ('references', django.contrib.postgres.fields.ArrayField(base_field=models.TextField(max_length=150), size=None)),
-                ('political_entity', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='territories', to='api.PoliticalEntity')),
+                ('references', django.contrib.postgres.fields.ArrayField(
+                    base_field=models.TextField(max_length=150), size=None)),
+                ('political_entity',
+                 models.ForeignKey(blank=True,
+                                   null=True,
+                                   on_delete=django.db.models.deletion.CASCADE,
+                                   related_name='territories',
+                                   to='api.PoliticalEntity')),
             ],
             options={
                 'verbose_name_plural': 'territories',
@@ -129,16 +265,26 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='historicalterritory',
             name='political_entity',
-            field=models.ForeignKey(blank=True, db_constraint=False, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', to='api.PoliticalEntity'),
+            field=models.ForeignKey(
+                blank=True,
+                db_constraint=False,
+                null=True,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                related_name='+',
+                to='api.PoliticalEntity'),
         ),
         migrations.AddField(
             model_name='diplomaticrelation',
             name='child_parties',
-            field=models.ManyToManyField(related_name='child_parties', to='api.PoliticalEntity'),
+            field=models.ManyToManyField(
+                related_name='child_parties',
+                to='api.PoliticalEntity'),
         ),
         migrations.AddField(
             model_name='diplomaticrelation',
             name='parent_parties',
-            field=models.ManyToManyField(related_name='parent_parties', to='api.PoliticalEntity'),
+            field=models.ManyToManyField(
+                related_name='parent_parties',
+                to='api.PoliticalEntity'),
         ),
     ]

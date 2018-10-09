@@ -11,9 +11,11 @@ class PoliticalEntityFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = PoliticalEntity
 
+
 class TerritoryFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Territory
+
 
 class DiplomaticRelationFactory(factory.django.DjangoModelFactory):
     class Meta:
