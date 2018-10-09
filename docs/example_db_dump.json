@@ -3,11 +3,16 @@
     "model": "admin.logentry",
     "pk": 1,
     "fields": {
-      "action_time": "2018-10-05T05:21:27.601Z",
-      "user": ["admin"],
-      "content_type": ["api", "politicalentity"],
+      "action_time": "2018-10-09T15:28:03.359Z",
+      "user": [
+        "admin"
+      ],
+      "content_type": [
+        "api",
+        "politicalentity"
+      ],
       "object_id": "1",
-      "object_repr": "test",
+      "object_repr": "Example PolEnt",
       "action_flag": 1,
       "change_message": "[{\"added\": {}}]"
     }
@@ -16,24 +21,34 @@
     "model": "admin.logentry",
     "pk": 2,
     "fields": {
-      "action_time": "2018-10-06T00:51:53.542Z",
-      "user": ["admin"],
-      "content_type": ["api", "politicalentity"],
-      "object_id": "1",
-      "object_repr": "test",
-      "action_flag": 3,
-      "change_message": ""
+      "action_time": "2018-10-09T15:28:25.824Z",
+      "user": [
+        "admin"
+      ],
+      "content_type": [
+        "api",
+        "politicalentity"
+      ],
+      "object_id": "2",
+      "object_repr": "Example PolEnt2",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
     }
   },
   {
     "model": "admin.logentry",
     "pk": 3,
     "fields": {
-      "action_time": "2018-10-06T00:52:49.215Z",
-      "user": ["admin"],
-      "content_type": ["api", "politicalentity"],
-      "object_id": "2",
-      "object_repr": "Example PolEnt",
+      "action_time": "2018-10-09T15:29:19.187Z",
+      "user": [
+        "admin"
+      ],
+      "content_type": [
+        "api",
+        "territory"
+      ],
+      "object_id": "1",
+      "object_repr": "Example PolEnt: 01/01/0001 - 01/02/0001",
       "action_flag": 1,
       "change_message": "[{\"added\": {}}]"
     }
@@ -42,130 +57,188 @@
     "model": "admin.logentry",
     "pk": 4,
     "fields": {
-      "action_time": "2018-10-06T00:53:52.049Z",
-      "user": ["admin"],
-      "content_type": ["api", "politicalentity"],
-      "object_id": "3",
-      "object_repr": "Example PolEnt #2",
-      "action_flag": 1,
-      "change_message": "[{\"added\": {}}]"
-    }
-  },
-  {
-    "model": "admin.logentry",
-    "pk": 5,
-    "fields": {
-      "action_time": "2018-10-06T00:54:48.022Z",
-      "user": ["admin"],
-      "content_type": ["api", "territory"],
+      "action_time": "2018-10-09T15:30:04.672Z",
+      "user": [
+        "admin"
+      ],
+      "content_type": [
+        "api",
+        "diplomaticrelation"
+      ],
       "object_id": "1",
-      "object_repr": "Example PolEnt: 01/01/0001 - 01/01/0099",
+      "object_repr": "Example PolEnt - Example PolEnt2: 01/01/0001 - 01/02/0001",
       "action_flag": 1,
       "change_message": "[{\"added\": {}}]"
-    }
-  },
-  {
-    "model": "admin.logentry",
-    "pk": 6,
-    "fields": {
-      "action_time": "2018-10-06T00:55:30.856Z",
-      "user": ["admin"],
-      "content_type": ["api", "territory"],
-      "object_id": "2",
-      "object_repr": "Example PolEnt #2: 01/01/0050 - 01/01/0099",
-      "action_flag": 1,
-      "change_message": "[{\"added\": {}}]"
-    }
-  },
-  {
-    "model": "admin.logentry",
-    "pk": 7,
-    "fields": {
-      "action_time": "2018-10-06T00:55:54.425Z",
-      "user": ["admin"],
-      "content_type": ["api", "diplomaticrelation"],
-      "object_id": "1",
-      "object_repr": "Example PolEnt - Example PolEnt #2: 01/01/0001 - 01/01/0050",
-      "action_flag": 1,
-      "change_message": "[{\"added\": {}}]"
-    }
-  },
-  {
-    "model": "admin.logentry",
-    "pk": 8,
-    "fields": {
-      "action_time": "2018-10-06T00:56:15.063Z",
-      "user": ["admin"],
-      "content_type": ["api", "diplomaticrelation"],
-      "object_id": "2",
-      "object_repr": "Example PolEnt - Example PolEnt #2: 01/01/0050 - 01/01/0099",
-      "action_flag": 1,
-      "change_message": "[{\"added\": {}}]"
-    }
-  },
-  {
-    "model": "admin.logentry",
-    "pk": 9,
-    "fields": {
-      "action_time": "2018-10-06T00:56:28.845Z",
-      "user": ["admin"],
-      "content_type": ["api", "diplomaticrelation"],
-      "object_id": "2",
-      "object_repr": "Example PolEnt - Example PolEnt #2: 01/01/0051 - 01/01/0099",
-      "action_flag": 2,
-      "change_message": "[{\"changed\": {\"fields\": [\"start_date\"]}}]"
     }
   },
   {
     "model": "sessions.session",
-    "pk": "raer5wdj0vr5wjrob5t0umz4fds5tbao",
+    "pk": "222rx511n6mmn069vxnchy1p6w3xmjro",
     "fields": {
-      "session_data": "ODM0NTBmYjI0OWNlZmYxZmRiMDdjMTRhODQxYzRhYWI2ODU0YzFhMjp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiI0NDM0MjU2NWUwNWNmY2Q0ZTg2MWVmYWRlZWFlMjM4NDI5OTFkZWE2In0=",
-      "expire_date": "2018-10-19T05:21:19.587Z"
+      "session_data": "ODFjMWRjYzBiMTZiODY1OTMwZWM3ODg5YzhkMGY3YWE4MDUzMzRjYjp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJjYTc3ZTUxOWI5ZTdkMjVkYTIzM2VhMTk5YzFkNDZkZDdmY2EwZTg5In0=",
+      "expire_date": "2018-10-23T15:23:07.381Z"
     }
   },
   {
-    "model": "api.historicalentity",
+    "model": "api.entity",
     "pk": 1,
     "fields": {
-      "id": 1,
-      "name": "test",
+      "polymorphic_ctype": [
+        "api",
+        "politicalentity"
+      ],
+      "name": "Example PolEnt",
       "url_id": "test",
-      "references": "[\"test\"]",
+      "references": "[\"www.example.com/test\"]",
       "links": "[]",
       "description": "",
-      "aliases": "[]",
-      "polymorphic_ctype": ["api", "politicalentity"],
-      "history_change_reason": null,
-      "history_date": "2018-10-06T00:51:53.560Z",
-      "history_user": ["admin"],
-      "history_type": "-"
+      "aliases": "[]"
     }
   },
   {
     "model": "api.entity",
     "pk": 2,
     "fields": {
-      "polymorphic_ctype": ["api", "politicalentity"],
-      "name": "Example PolEnt",
-      "url_id": "test",
-      "references": "[\"example.org\"]",
-      "links": "[\"http://example.com\"]",
-      "description": "Example PolEnt for testing purposes.",
-      "aliases": "[\"Test PolEnt\"]"
+      "polymorphic_ctype": [
+        "api",
+        "politicalentity"
+      ],
+      "name": "Example PolEnt2",
+      "url_id": "test2",
+      "references": "[\"www.example.com/test2\"]",
+      "links": "[]",
+      "description": "",
+      "aliases": "[]"
     }
   },
   {
-    "model": "api.entity",
-    "pk": 3,
+    "model": "api.historicalpoliticalentity",
+    "pk": 1,
     "fields": {
-      "polymorphic_ctype": ["api", "politicalentity"],
-      "name": "Example PolEnt #2",
+      "id": 1,
+      "name": "Example PolEnt",
+      "url_id": "test",
+      "references": "[\"www.example.com/test\"]",
+      "links": "[]",
+      "description": "",
+      "aliases": "[]",
+      "color": "#000000",
+      "control_type": "CC",
+      "polymorphic_ctype": [
+        "api",
+        "politicalentity"
+      ],
+      "entity_ptr": 1,
+      "history_change_reason": null,
+      "history_date": "2018-10-09T15:28:03.357Z",
+      "history_user": [
+        "admin"
+      ],
+      "history_type": "+"
+    }
+  },
+  {
+    "model": "api.historicalpoliticalentity",
+    "pk": 2,
+    "fields": {
+      "id": 2,
+      "name": "Example PolEnt2",
       "url_id": "test2",
-      "references": "[\"example.org\"]",
-      "links": "[\"http://example.com\"]",
-      "description": "Second example politicalentity for testing purposes.",
-      "aliases": "[\"Second Example PolEnt\", \"Test PolEnt #2\"]"
+      "references": "[\"www.example.com/test2\"]",
+      "links": "[]",
+      "description": "",
+      "aliases": "[]",
+      "color": "#FFFFFF",
+      "control_type": "CC",
+      "polymorphic_ctype": [
+        "api",
+        "politicalentity"
+      ],
+      "entity_ptr": 2,
+      "history_change_reason": null,
+      "history_date": "2018-10-09T15:28:25.822Z",
+      "history_user": [
+        "admin"
+      ],
+      "history_type": "+"
+    }
+  },
+  {
+    "model": "api.politicalentity",
+    "pk": 1,
+    "fields": {
+      "color": "#000000",
+      "control_type": "CC"
+    }
+  },
+  {
+    "model": "api.politicalentity",
+    "pk": 2,
+    "fields": {
+      "color": "#FFFFFF",
+      "control_type": "CC"
+    }
+  },
+  {
+    "model": "api.historicalterritory",
+    "pk": 1,
+    "fields": {
+      "id": 1,
+      "start_date": "0001-01-01",
+      "end_date": "0001-01-02",
+      "geo": "SRID=4326;POLYGON ((-1.10595703125 26.9873538466933, 22.53662109375 22.51932121801866, 6.892089843749996 33.80349356160617, -1.10595703125 26.9873538466933))",
+      "references": "[\"www.example.com/test\"]",
+      "entity": 1,
+      "history_change_reason": null,
+      "history_date": "2018-10-09T15:29:19.184Z",
+      "history_user": [
+        "admin"
+      ],
+      "history_type": "+"
+    }
+  },
+  {
+    "model": "api.territory",
+    "pk": 1,
+    "fields": {
+      "start_date": "0001-01-01",
+      "end_date": "0001-01-02",
+      "geo": "SRID=4326;POLYGON ((-1.10595703125 26.9873538466933, 22.53662109375 22.51932121801866, 6.892089843749996 33.80349356160617, -1.10595703125 26.9873538466933))",
+      "entity": 1,
+      "references": "[\"www.example.com/test\"]"
+    }
+  },
+  {
+    "model": "api.historicaldiplomaticrelation",
+    "pk": 1,
+    "fields": {
+      "id": 1,
+      "start_date": "0001-01-01",
+      "end_date": "0001-01-02",
+      "diplo_type": "A",
+      "references": "[\"www.example.com/test\"]",
+      "history_change_reason": null,
+      "history_date": "2018-10-09T15:30:04.660Z",
+      "history_user": [
+        "admin"
+      ],
+      "history_type": "+"
+    }
+  },
+  {
+    "model": "api.diplomaticrelation",
+    "pk": 1,
+    "fields": {
+      "start_date": "0001-01-01",
+      "end_date": "0001-01-02",
+      "diplo_type": "A",
+      "references": "[\"www.example.com/test\"]",
+      "parent_parties": [
+        1
+      ],
+      "child_parties": [
+        2
+      ]
     }
   }
 ]
