@@ -20,7 +20,7 @@ class TerritorySerializer(serializers.ModelSerializer):
     """
     Serializes the Territory model as GeoJSON compatible data
     """
-    nation = serializers.SlugRelatedField(
+    entity = serializers.SlugRelatedField(
         read_only=True,
         slug_field='url_id'
     )
@@ -55,14 +55,17 @@ class TerritorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Territory
         fields = '__all__'
-        depth = 1
 
 
 class DiplomaticRelationSerializer(serializers.ModelSerializer):
     """
     Serializes the DiplomaticRelation model
     """
+    entity = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='url_id'
+    )
+
     class Meta:
         model = DiplomaticRelation
         fields = '__all__'
-        depth = 1
