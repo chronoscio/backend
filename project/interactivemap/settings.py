@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework_gis',
     'django_filters',
+    'django_extensions',
     'corsheaders',
     'simple_history',
     'colorfield',

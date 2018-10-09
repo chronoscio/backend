@@ -25,6 +25,9 @@ run: ## Builds, starts, and runs containers
 stop: ## Stops running containers
 	docker-compose stop
 
+clean: ## Stop and remove containers, networks, volmes, and images
+	docker-compose down
+
 # Debug tools
 run_debug: ## Builds, starts, and runs containers, running the built-in Django web server
 	docker-compose run --service-ports web sh init.sh python manage.py runserver 0.0.0.0:81
@@ -39,17 +42,17 @@ test: ## Builds, starts, and runs containers, running the django tests
 exec_test: ## Executes django tests in a running container
 	docker-compose exec web python manage.py test
 
-testk: ## Run Django tests, keeping the database schema from the previous test run
-	docker-compose run web python manage.py test -k
-
-exec_testk: ## Executes django tests in a running container
+exec_testk: ## Executes django tests in a running container, keeping the database schema from the previous test run
 	docker-compose exec web python manage.py test -k
 
 bash: ## SSH into the docker container
-	docker-compose run web /bin/bash
+	docker-compose exec web sh
 
-shell: ## Open the django shell
-	docker-compose run web python manage.py shell
+shell: ## Open the django shell (https://django-extensions.readthedocs.io/en/latest/shell_plus.html)
+	docker-compose exec web python manage.py shell_plus
+
+dbshell: ## Open postgres
+	docker-compose exec -u postgres db psql
 
 admin: ## Creates a super user in the running `web` container based on the values supplied in the configuration file [NOT WORKING ATM]
 	docker-compose exec web ./manage.py shell -c "from django.contrib.auth.models import User; User.objects.create_superuser('$(ADMIN_USER)', '$(ADMIN_EMAIL)', '$(ADMIN_PASS)')"
