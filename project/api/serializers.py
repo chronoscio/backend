@@ -13,14 +13,14 @@ class PoliticalEntitySerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = PoliticalEntity
-        fields = '__all__'
+        exclude = ('polymorphic_ctype',)
 
 
 class TerritorySerializer(serializers.ModelSerializer):
     """
     Serializes the Territory model as GeoJSON compatible data
     """
-    nation = serializers.SlugRelatedField(
+    entity = serializers.SlugRelatedField(
         read_only=True,
         slug_field='url_id'
     )
@@ -56,10 +56,16 @@ class TerritorySerializer(serializers.ModelSerializer):
         model = Territory
         fields = '__all__'
 
+
 class DiplomaticRelationSerializer(serializers.ModelSerializer):
     """
     Serializes the DiplomaticRelation model
     """
+    entity = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='url_id'
+    )
+
     class Meta:
         model = DiplomaticRelation
         fields = '__all__'

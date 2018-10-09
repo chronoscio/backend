@@ -73,7 +73,7 @@ $ curl --request GET   --url http://localhost/api/    --header 'authorization: B
 
 ```bash
 # Import:
-mv docs/example_db_dump.json project/db.json # optional, uses our provided test data
+cp docs/example_db_dump.json project/db.json # optional, uses our provided test data
 docker-compose exec web python manage.py loaddata db.json # note that this will assume db.json is in the project directory
 
 # Export:
