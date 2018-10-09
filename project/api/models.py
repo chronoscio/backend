@@ -45,15 +45,13 @@ class Nation(models.Model):
     aliases = ArrayField(
         models.TextField(max_length=100),
         help_text="Alternative names this state may be known by",
-        blank=True,
-        null=True,
+        default=[""]
     )
     description = models.TextField(help_text="Flavor text, brief history, etc.",
                                    blank=True)
     links = ArrayField(
         models.URLField(),
-        blank=True,
-        null=True,
+        default=[""]
     )
     CONTROL_TYPE_CHOICES = (
         ("CC", "Complete Control"),
