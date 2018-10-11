@@ -42,14 +42,14 @@ class Entity(PolymorphicModel):
     )
     links = ArrayField(
         models.URLField(),
-        blank=True,
+        default=list("")
     )
     description = models.TextField(
         help_text="Flavor text, brief history, etc.", blank=True)
     aliases = ArrayField(
         models.TextField(max_length=100),
         help_text="Alternative names this state may be known by",
-        blank=True,
+        default=list("")
     )
 
     def natural_key(self):
