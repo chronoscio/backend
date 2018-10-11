@@ -42,16 +42,14 @@ class Entity(PolymorphicModel):
     )
     links = ArrayField(
         models.URLField(),
-        default=list("")
+        blank=True,
     )
     description = models.TextField(
-        help_text="Flavor text, brief history, etc.", 
-        blank=True
-    )
+        help_text="Flavor text, brief history, etc.", blank=True)
     aliases = ArrayField(
         models.TextField(max_length=100),
         help_text="Alternative names this state may be known by",
-        default=list("")
+        blank=True,
     )
 
     def natural_key(self):
@@ -79,7 +77,8 @@ class PoliticalEntity(Entity):
     control_type = models.TextField(
         max_length=2,
         choices=CONTROL_TYPE_CHOICES,
-        default="CC"
+        default="CC",
+        blank=True,
     )
 
     # History fields
