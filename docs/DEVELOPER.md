@@ -51,19 +51,21 @@ a nuanced understanding of docker is not necessary for code contribution.
 
 If you are having trouble with Docker (e.g. on Windows), this project can also be run locally with
 the following changes:
+
 - Create a python virtualenv, activate it, and install the package requirements:
-`cd backend; virtualenv venv; source venv/bin/activate; pip install -r config/requirements.txt`
+  `cd backend; virtualenv venv; source venv/bin/activate; pip install -r config/requirements.txt`
 - Install and run Postgres locally
 - Change your DATABASES > default > HOST variable to `localhost` (and maybe change the port to
-match your Postgres database)
+  match your Postgres database)
 
 ## API endpoints
 
 ```bash
-$ curl --request GET   --url http://localhost/api/    --header 'athorization: Bearer {ACCESS_TOKEN}'
+$ curl --request GET   --url http://localhost/api/    --header 'authorization: Bearer {ACCESS_TOKEN}'
 {
-    "nations": "http://web/api/nations/",
-    "territories": "http://web/api/territories/"
+    "politicalentities": "http://localhost/api/politicalentities/",
+    "territories": "http://localhost/api/territories/",
+    "diprels": "http://localhost/api/diprels/"
 }
 ```
 
@@ -71,11 +73,11 @@ $ curl --request GET   --url http://localhost/api/    --header 'athorization: Be
 
 ```bash
 # Import:
-mv docs/example_db_dump.json project/db.json # optional, uses our provided test data
+cp docs/example_db_dump.json project/db.json # optional, uses our provided test data
 docker-compose exec web python manage.py loaddata db.json # note that this will assume db.json is in the project directory
 
 # Export:
 docker-compose exec web python manage.py dumpdata \
-  --natural-foreign --exclude auth.permission --exclude contenttypes \
+  --natural-foreign --exclude auth --exclude contenttypes \
   > db.json
 ```

@@ -11,6 +11,7 @@ django-simple-history==2.3.0
 Django==2.1.2
 djangorestframework-gis==0.13
 djangorestframework-jwt==1.11.0
+django_polymorphic==2.0.3
 djangorestframework==3.8.2
 factory-boy==2.11.1
 gunicorn==19.7.0

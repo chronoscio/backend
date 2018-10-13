@@ -1,19 +1,21 @@
 from rest_framework import viewsets, permissions
 
-from .models import Nation, Territory, DiplomaticRelation
-from .serializers import NationSerializer, TerritorySerializer, DiplomaticRelationSerializer
+from .models import PoliticalEntity, Territory, DiplomaticRelation
+from .serializers import PoliticalEntitySerializer, TerritorySerializer, DiplomaticRelationSerializer
 from .filters import TerritoryFilter
 
-class NationViewSet(viewsets.ModelViewSet):
+
+class PoliticalEntityViewSet(viewsets.ModelViewSet):
     """
-    Viewset for the Nation model
+    Viewset for the PoliticalEntity model
     """
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    queryset = Nation.objects.all()
-    serializer_class = NationSerializer
+    queryset = PoliticalEntity.objects.all()
+    serializer_class = PoliticalEntitySerializer
     lookup_field = 'url_id'
 
     # TODO use request.user to update revision table
+
 
 class TerritoryViewSet(viewsets.ModelViewSet):
     """
@@ -26,6 +28,7 @@ class TerritoryViewSet(viewsets.ModelViewSet):
     queryset = Territory.objects.all()
 
     # TODO use request.user to update revision table
+
 
 class DiplomaticRelationViewSet(viewsets.ModelViewSet):
     """

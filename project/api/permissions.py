@@ -19,6 +19,7 @@ class IsStaffOrSpecificUser(permissions.BasePermission):
         Alice (staff) should be able to access John's account
         Jane (regular user) should not be able to access John's account
     """
+
     def has_permission(self, request, view):
         # allow user to list all users if logged in user is staff
         return view.action == 'retrieve' or request.user.is_staff
@@ -26,6 +27,7 @@ class IsStaffOrSpecificUser(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         # allow all users to view specific user information
         return True
+
 
 def get_token_auth_header(request):
     """
@@ -37,6 +39,7 @@ def get_token_auth_header(request):
 
     return token
 
+
 def requires_scope(required_scope):
     """
     Determines if the required scope is present in the access token
@@ -47,20 +50,34 @@ def requires_scope(required_scope):
         @wraps(f)
         def decorated(*args, **kwargs):
             token = get_token_auth_header(args[0])
-            jsonurl = req.urlopen('https://' + settings.AUTH0_DOMAIN + '/.well-known/jwks.json')
+            jsonurl = req.urlopen(
+                'https://' +
+                settings.AUTH0_DOMAIN +
+                '/.well-known/jwks.json')
             jwks = json.loads(jsonurl.read())
-            body = re.sub("(.{64})", "\\1\n", jwks['keys'][0]['x5c'][0], 0, re.DOTALL)
+            body = re.sub(
+                "(.{64})",
+                "\\1\n",
+                jwks['keys'][0]['x5c'][0],
+                0,
+                re.DOTALL)
             cert = '-----BEGIN CERTIFICATE-----\n' + body + '\n-----END CERTIFICATE-----'
-            certificate = load_pem_x509_certificate(cert.encode('utf-8'), default_backend())
+            certificate = load_pem_x509_certificate(
+                cert.encode('utf-8'), default_backend())
             public_key = certificate.public_key()
-            decoded = jwt.decode(token, public_key, audience=settings.API_IDENTIFIER, algorithms=['RS256'])
+            decoded = jwt.decode(
+                token,
+                public_key,
+                audience=settings.API_IDENTIFIER,
+                algorithms=['RS256'])
 
             if decoded.get("scope"):
                 token_scopes = decoded["scope"].split()
                 for token_scope in token_scopes:
                     if token_scope == required_scope:
                         return f(*args, **kwargs)
-            response = JsonResponse({'message': 'You don\'t have access to this resource'})
+            response = JsonResponse(
+                {'message': 'You don\'t have access to this resource'})
             response.status_code = 403
             return response
         return decorated

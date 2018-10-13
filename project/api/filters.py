@@ -26,4 +26,4 @@ class TerritoryFilter(FilterSet):
 
     class Meta:
         model = Territory
-        fields = ('nation',)
+        fields = ('entity',)

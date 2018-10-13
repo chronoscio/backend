@@ -4,21 +4,23 @@ from django.contrib.auth.models import User
 from django.contrib.gis.geos import GEOSGeometry
 from rest_framework import serializers
 
-from .models import Nation, Territory, DiplomaticRelation
+from .models import PoliticalEntity, Territory, DiplomaticRelation
 
-class NationSerializer(serializers.ModelSerializer):
+
+class PoliticalEntitySerializer(serializers.ModelSerializer):
     """
-    Serializes the Nation model
+    Serializes the PoliticalEntity model
     """
     class Meta:
-        model = Nation
-        fields = '__all__'
+        model = PoliticalEntity
+        exclude = ('polymorphic_ctype',)
+
 
 class TerritorySerializer(serializers.ModelSerializer):
     """
     Serializes the Territory model as GeoJSON compatible data
     """
-    nation = serializers.SlugRelatedField(
+    entity = serializers.SlugRelatedField(
         read_only=True,
         slug_field='url_id'
     )
@@ -28,9 +30,9 @@ class TerritorySerializer(serializers.ModelSerializer):
 
         # Update ret to include passed in data
         for field, val in data.items():
-            if field == 'nation':
-                ret['nation'] = Nation.objects.get(pk=val)
-            if field != 'geo' and field != 'nation':
+            if field == 'entity':
+                ret['entity'] = PoliticalEntity.objects.get(pk=val)
+            if field != 'geo' and field != 'entity':
                 ret[field] = val
 
         # Convert geo field to MultiPolygon if it is a FeatureCollection
@@ -42,7 +44,8 @@ class TerritorySerializer(serializers.ModelSerializer):
 
             for feature in features:
                 if feature['geometry']['type'] == 'Polygon':
-                    features_union = features_union.union(GEOSGeometry(dumps(feature['geometry'])))
+                    features_union = features_union.union(
+                        GEOSGeometry(dumps(feature['geometry'])))
 
             ret['geo'] = features_union
         else:
@@ -54,10 +57,16 @@ class TerritorySerializer(serializers.ModelSerializer):
         model = Territory
         fields = '__all__'
 
+
 class DiplomaticRelationSerializer(serializers.ModelSerializer):
     """
     Serializes the DiplomaticRelation model
     """
+    entity = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='url_id'
+    )
+
     class Meta:
         model = DiplomaticRelation
         fields = '__all__'

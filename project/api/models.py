@@ -5,54 +5,70 @@ from django.contrib.gis.db import models
 from django.contrib.postgres.fields import ArrayField
 from simple_history.models import HistoricalRecords
 from colorfield.fields import ColorField
+from polymorphic.models import PolymorphicModel, PolymorphicManager
 
 # Create your models here.
 
-class NationManager(models.Manager):
+
+class EntityManager(PolymorphicManager):
     """
     Manager for the Nation model to handle lookups by url_id
     """
+
     def get_by_natural_key(self, url_id):
         return self.get(url_id=url_id)
 
-class Nation(models.Model):
+
+class Entity(PolymorphicModel):
     """
     Cultural/governmental entity. Serves as foreign key for most Territories
     """
-    objects = NationManager()
+    objects = EntityManager()
 
-    name = models.TextField(max_length=100,
-                            help_text="Canonical name, should not include any epithets, must be unique",
-                            unique=True)
-    url_id = models.SlugField(max_length=75,
-                              help_text="Identifier used to lookup nations in the URL, "
-                                        "should be kept short and must be unique",
-                              unique=True)
+    name = models.TextField(
+        max_length=100,
+        help_text="Canonical name, should not include any epithets, must be unique",
+        unique=True)
+    url_id = models.SlugField(
+        max_length=75,
+        help_text="Identifier used to lookup Entities in the URL, "
+        "should be kept short and must be unique",
+        unique=True)
+    history = HistoricalRecords()
+
+    # required fields
+    references = ArrayField(
+        models.TextField(max_length=150),
+    )
+    links = ArrayField(
+        models.URLField(),
+        default=list("")
+    )
+    description = models.TextField(
+        help_text="Flavor text, brief history, etc.", blank=True)
+    aliases = ArrayField(
+        models.TextField(max_length=100),
+        help_text="Alternative names this state may be known by",
+        default=list("")
+    )
+
+    def natural_key(self):
+        return self.url_id
+
+    def __str__(self):
+        return self.name
+
+
+class PoliticalEntity(Entity):
+    """
+    Cultural/governmental entity. Serves as foreign key for most Territories
+    """
     color = ColorField(help_text="Color to display on map",
                        unique=True,
                        null=True,
                        blank=True)
     history = HistoricalRecords()
 
-    # Flavor fields
-
-    # required fields
-    references = ArrayField(
-        models.TextField(max_length=150),
-    )
-
-    # optional fields
-    aliases = ArrayField(
-        models.TextField(max_length=100),
-        help_text="Alternative names this state may be known by",
-        default=list("")
-    )
-    description = models.TextField(help_text="Flavor text, brief history, etc.",
-                                   blank=True)
-    links = ArrayField(
-        models.URLField(),
-        default=list("")
-    )
     CONTROL_TYPE_CHOICES = (
         ("CC", "Complete Control"),
         ("DT", "Disputed Territory"),
@@ -61,7 +77,8 @@ class Nation(models.Model):
     control_type = models.TextField(
         max_length=2,
         choices=CONTROL_TYPE_CHOICES,
-        default="CC"
+        default="CC",
+        blank=True,
     )
 
     # History fields
@@ -71,16 +88,10 @@ class Nation(models.Model):
     # Consider other metadata (DateTime) for the revision (may be handled by django-simple-history)
     # TODO: implement this
 
-    def natural_key(self):
-        return self.url_id
-
-    def __str__(self):
-        return self.name
-
 
 class Territory(models.Model):
     """
-    Defines the borders and controlled territories associated with a Nation.
+    Defines the borders and controlled territories associated with an Entity.
     """
     class Meta:
         verbose_name_plural = "territories"
@@ -88,9 +99,10 @@ class Territory(models.Model):
     start_date = models.DateField(help_text="When this border takes effect")
     end_date = models.DateField(help_text="When this border ceases to exist")
     geo = models.GeometryField()
-    nation = models.ForeignKey(Nation,
-                               related_name="territories",
-                               on_delete=models.CASCADE)
+    entity = models.ForeignKey(
+        Entity,
+        related_name='territories',
+        on_delete=models.CASCADE)
     references = ArrayField(
         models.TextField(max_length=150),
     )
@@ -99,14 +111,18 @@ class Territory(models.Model):
     def clean(self, *args, **kwargs):
         if self.start_date > self.end_date:
             raise ValidationError("Start date cannot be later than end date")
-        if loads(self.geo.json)["type"] != "Polygon" and loads(self.geo.json)["type"] != "MultiPolygon":
+        if loads(self.geo.json)["type"] != "Polygon" and loads(
+                self.geo.json)["type"] != "MultiPolygon":
             raise ValidationError(
                 "Only Polygon and MultiPolygon objects are acceptable geometry types.")
 
         # This date check is inculsive.
-        if Territory.objects.filter(start_date__lte=self.end_date, end_date__gte=self.start_date, nation__exact=self.nation).exists():
+        if Territory.objects.filter(
+                start_date__lte=self.end_date,
+                end_date__gte=self.start_date,
+                entity__exact=self.entity).exists():
             raise ValidationError(
-                "Another territory of this nation exists during this timeframe.")
+                "Another territory of this PoliticalEntity exists during this timeframe.")
 
         super(Territory, self).clean(*args, **kwargs)
 
@@ -115,21 +131,21 @@ class Territory(models.Model):
         super(Territory, self).save(*args, **kwargs)
 
     def __str__(self):
-        return "%s: %s - %s" % (self.nation.name,
+        return "%s: %s - %s" % (self.entity.name,
                                 self.start_date.strftime("%m/%d/%Y"),
                                 self.end_date.strftime("%m/%d/%Y"))
 
 
 class DiplomaticRelation(models.Model):
     """
-    Defines political and diplomatic interactions between Nations.
+    Defines political and diplomatic interactions between PoliticalEntitys.
     """
     start_date = models.DateField(help_text="When this relation takes effect")
     end_date = models.DateField(help_text="When this relation ceases to exist")
     parent_parties = models.ManyToManyField(
-        Nation, related_name='parent_parties')
+        PoliticalEntity, related_name='parent_parties')
     child_parties = models.ManyToManyField(
-        Nation, related_name='child_parties')
+        PoliticalEntity, related_name='child_parties')
     DIPLO_TYPE_CHOICES = (
         ("A", "Military Alliance"),
         ("D", "Dual Monarchy"),
