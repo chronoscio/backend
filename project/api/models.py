@@ -116,13 +116,16 @@ class Territory(models.Model):
             raise ValidationError(
                 "Only Polygon and MultiPolygon objects are acceptable geometry types.")
 
-        # This date check is inculsive.
-        if Territory.objects.filter(
-                start_date__lte=self.end_date,
-                end_date__gte=self.start_date,
-                entity__exact=self.entity).exists():
-            raise ValidationError(
-                "Another territory of this PoliticalEntity exists during this timeframe.")
+        try:
+            # This date check is inculsive.
+            if Territory.objects.filter(
+                    start_date__lte=self.end_date,
+                    end_date__gte=self.start_date,
+                    entity__exact=self.entity).exists():
+                raise ValidationError(
+                    "Another territory of this PoliticalEntity exists during this timeframe.")
+        except Entity.DoesNotExist:
+            pass
 
         super(Territory, self).clean(*args, **kwargs)
 
