@@ -7,6 +7,7 @@ from django.contrib.gis.geos import GEOSGeometry
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from rest_framework import status
+import geobuf
 from rest_framework.test import APITestCase
 from os import environ
 from .models import PoliticalEntity, Territory, DiplomaticRelation
@@ -345,6 +346,17 @@ class APITest(APITestCase):
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[0]["entity"], "test_nation")
+
+    def test_api_can_decompress_geojson(self):
+        """
+        Ensure we send geometry as a valid geobuf.
+        """
+        url = reverse("territory-list")
+        response = self.client.get(url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        gbuf = bytes.fromhex(response.data[0]["geo"])
+        geojson = json.dumps(geobuf.decode(gbuf))
+        self.assertEqual(geojson, '{"type": "MultiPolygon", "coordinates": [[[[102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0]]], [[[100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0]], [[100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2]]]]}')
 
     def test_api_can_query_territory(self):
         """

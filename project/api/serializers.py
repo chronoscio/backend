@@ -3,7 +3,7 @@ from json import loads, dumps
 from django.contrib.auth.models import User
 from django.contrib.gis.geos import GEOSGeometry
 from rest_framework import serializers
-
+import geobuf
 from .models import PoliticalEntity, Territory, DiplomaticRelation
 
 
@@ -16,6 +16,17 @@ class PoliticalEntitySerializer(serializers.ModelSerializer):
         exclude = ('polymorphic_ctype',)
 
 
+class GeoField(serializers.RelatedField):
+    """
+    Field Serializer for Territories
+    """
+    @classmethod
+    def to_representation(self, value):
+        # Compress geojson to geobuf and return as hexadecimal
+        gbuf = geobuf.encode(loads(value.geojson))
+        return gbuf.hex()
+
+
 class TerritorySerializer(serializers.ModelSerializer):
     """
     Serializes the Territory model as GeoJSON compatible data
@@ -24,6 +35,8 @@ class TerritorySerializer(serializers.ModelSerializer):
         read_only=True,
         slug_field='url_id'
     )
+
+    geo = GeoField(read_only=True)
 
     def to_internal_value(self, data):
         ret = {}

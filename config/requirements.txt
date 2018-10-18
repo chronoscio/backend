@@ -22,3 +22,4 @@ ptvsd==3.0.0
 pyjwt==1.6.4
 pylint-django==0.11.1
 pylint==1.8.4
+geobuf==1.1.1
