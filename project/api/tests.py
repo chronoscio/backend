@@ -9,9 +9,12 @@ from django.core.exceptions import ValidationError
 from rest_framework import status
 import geobuf
 from rest_framework.test import APITestCase
-from os import environ
 from .models import PoliticalEntity, Territory, DiplomaticRelation
-from .factories import PoliticalEntityFactory, TerritoryFactory, DiplomaticRelationFactory
+from .factories import (
+    PoliticalEntityFactory,
+    TerritoryFactory,
+    DiplomaticRelationFactory,
+)
 
 # https://stackoverflow.com/a/815160/
 
@@ -31,8 +34,9 @@ def memoize(function):
 
 
 @memoize
-def getUserToken(client_id=settings.AUTH0_CLIENT_ID,
-                 client_secret=settings.AUTH0_CLIENT_SECRET):
+def getUserToken(
+    client_id=settings.AUTH0_CLIENT_ID, client_secret=settings.AUTH0_CLIENT_SECRET
+):
     url = "https://" + settings.AUTH0_DOMAIN + "/oauth/token"
     headers = {"content-type": "application/json"}
     parameter = {
@@ -41,11 +45,7 @@ def getUserToken(client_id=settings.AUTH0_CLIENT_ID,
         "audience": settings.API_IDENTIFIER,
         "grant_type": "client_credentials",
     }
-    response = json.loads(
-        requests.post(
-            url,
-            json=parameter,
-            headers=headers).text)
+    response = json.loads(requests.post(url, json=parameter, headers=headers).text)
     return response["access_token"]
 
 
@@ -100,11 +100,10 @@ class ModelTest(TestCase):
             color="ddd",
             references=["https://en.wikipedia.org/wiki/Test"],
             aliases=[],
-            links=[])
+            links=[],
+        )
         new_politicalentity.save()
-        self.assertTrue(
-            PoliticalEntity.objects.filter(
-                url_id="test_nation2").exists())
+        self.assertTrue(PoliticalEntity.objects.filter(url_id="test_nation2").exists())
 
     def test_model_can_create_territory(self):
         """
@@ -122,9 +121,9 @@ class ModelTest(TestCase):
         )
         self.assertTrue(
             Territory.objects.filter(
-                entity=politicalentity,
-                start_date="0007-01-01",
-                end_date="0008-01-01").exists())
+                entity=politicalentity, start_date="0007-01-01", end_date="0008-01-01"
+            ).exists()
+        )
         politicalentity = PoliticalEntity.objects.get(url_id="test_nation")
         Territory.objects.create(
             start_date="0004-01-02",
@@ -133,13 +132,13 @@ class ModelTest(TestCase):
             references=["https://en.wikipedia.org/wiki/Test"],
             geo=GEOSGeometry(
                 '{"type": "MultiPolygon","coordinates": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}'
-            )
+            ),
         )
         self.assertTrue(
             Territory.objects.filter(
-                entity=politicalentity,
-                start_date="0004-01-02",
-                end_date="0006-12-31").exists())
+                entity=politicalentity, start_date="0004-01-02", end_date="0006-12-31"
+            ).exists()
+        )
 
     def test_model_can_not_create_territory(self):
         """
@@ -154,7 +153,7 @@ class ModelTest(TestCase):
                 references=["https://en.wikipedia.org/wiki/Test"],
                 geo=GEOSGeometry(
                     '{"type": "MultiPolygon","coordinates": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}'
-                )
+                ),
             )
         with self.assertRaises(ValidationError):
             Territory.objects.create(
@@ -164,7 +163,7 @@ class ModelTest(TestCase):
                 references=["https://en.wikipedia.org/wiki/Test"],
                 geo=GEOSGeometry(
                     '{"type": "MultiPolygon","coordinates": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}'
-                )
+                ),
             )
         with self.assertRaises(ValidationError):
             Territory.objects.create(
@@ -174,7 +173,7 @@ class ModelTest(TestCase):
                 references=["https://en.wikipedia.org/wiki/Test"],
                 geo=GEOSGeometry(
                     '{"type": "MultiPolygon","coordinates": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}'
-                )
+                ),
             )
         with self.assertRaises(ValidationError):
             Territory.objects.create(
@@ -184,7 +183,7 @@ class ModelTest(TestCase):
                 references=["https://en.wikipedia.org/wiki/Test"],
                 geo=GEOSGeometry(
                     '{"type": "MultiPolygon","coordinates": [[[ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]],[[ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],[ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]]]}'
-                )
+                ),
             )
 
 
@@ -254,10 +253,7 @@ class APITest(APITestCase):
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(PoliticalEntity.objects.count(), 3)
-        self.assertEqual(
-            PoliticalEntity.objects.get(
-                pk=3).name,
-            "Created Test Nation")
+        self.assertEqual(PoliticalEntity.objects.get(pk=3).name, "Created Test Nation")
 
     def test_api_can_create_territory_FC(self):
         """
@@ -327,7 +323,7 @@ class APITest(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Bearer " + getUserToken())
         response = self.client.put(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['entity'], self.child_nation.url_id)
+        self.assertEqual(response.data["entity"], self.child_nation.url_id)
 
     def test_api_can_query_PoliticalEntities(self):
         """
@@ -356,7 +352,10 @@ class APITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         gbuf = bytes.fromhex(response.data[0]["geo"])
         geojson = json.dumps(geobuf.decode(gbuf))
-        self.assertEqual(geojson, '{"type": "MultiPolygon", "coordinates": [[[[102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0]]], [[[100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0]], [[100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2]]]]}')
+        self.assertEqual(
+            geojson,
+            '{"type": "MultiPolygon", "coordinates": [[[[102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0]]], [[[100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0]], [[100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2]]]]}',
+        )
 
     def test_api_can_query_territory(self):
         """
@@ -373,8 +372,9 @@ class APITest(APITestCase):
         region
         """
         url = (
-            reverse("territory-list") +
-            "?bounds=((0.0, 0.0), (0.0, 150.0), (150.0, 150.0), (150.0, 0.0), (0.0, 0.0))")
+            reverse("territory-list")
+            + "?bounds=((0.0, 0.0), (0.0, 150.0), (150.0, 150.0), (150.0, 0.0), (0.0, 0.0))"
+        )
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[0]["entity"], "test_nation")
@@ -385,8 +385,9 @@ class APITest(APITestCase):
         lie in fails
         """
         url = (
-            reverse("territory-list") +
-            "?bounds=((0.0, 0.0), (0.0, 50.0), (50.0, 50.0), (50.0, 0.0), (0.0, 0.0))")
+            reverse("territory-list")
+            + "?bounds=((0.0, 0.0), (0.0, 50.0), (50.0, 50.0), (50.0, 0.0), (0.0, 0.0))"
+        )
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(not response.data)
@@ -423,8 +424,7 @@ class APITest(APITestCase):
         """
         Ensure we can exclude territories by id
         """
-        url = reverse("territory-list") + "?exclude_ids=" + \
-            str(self.territory.id)
+        url = reverse("territory-list") + "?exclude_ids=" + str(self.territory.id)
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[0]["id"], self.territory2.id)
