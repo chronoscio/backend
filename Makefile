@@ -45,6 +45,9 @@ exec_test: ## Executes django tests in a running container
 exec_testk: ## Executes django tests in a running container, keeping the database schema from the previous test run
 	docker-compose exec web python manage.py test -k
 
+lint: ## Lints python files to pass CI
+	docker-compose exec web black . --exclude /migrations/
+
 bash: ## SSH into the docker container
 	docker-compose exec web sh
 

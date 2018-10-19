@@ -9,7 +9,7 @@ import socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.close()
 try:
-    ptvsd.enable_attach("my_secret", address=('0.0.0.0', 3500))
+    ptvsd.enable_attach("my_secret", address=("0.0.0.0", 3500))
 except BaseException:
     pass
 
