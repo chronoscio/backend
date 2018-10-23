@@ -95,7 +95,7 @@ class Territory(models.Model):
 
     start_date = models.DateField(help_text="When this border takes effect")
     end_date = models.DateField(help_text="When this border ceases to exist")
-    geo = models.GeometryField()
+    geo = models.GeometryField(blank=True, null=True)
     entity = models.ForeignKey(
         Entity, related_name="territories", on_delete=models.CASCADE
     )
@@ -105,13 +105,14 @@ class Territory(models.Model):
     def clean(self, *args, **kwargs):
         if self.start_date > self.end_date:
             raise ValidationError("Start date cannot be later than end date")
-        if (
-            loads(self.geo.json)["type"] != "Polygon"
-            and loads(self.geo.json)["type"] != "MultiPolygon"
-        ):
-            raise ValidationError(
-                "Only Polygon and MultiPolygon objects are acceptable geometry types."
-            )
+        if not self.geo is None:
+            if (
+                loads(self.geo.json)["type"] != "Polygon"
+                and loads(self.geo.json)["type"] != "MultiPolygon"
+            ):
+                raise ValidationError(
+                    "Only Polygon and MultiPolygon objects are acceptable geometry types."
+                )
 
         try:
             # This date check is inculsive.
@@ -127,10 +128,6 @@ class Territory(models.Model):
             pass
 
         super(Territory, self).clean(*args, **kwargs)
-
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        super(Territory, self).save(*args, **kwargs)
 
     def __str__(self):
         return "%s: %s - %s" % (
