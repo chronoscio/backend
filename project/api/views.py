@@ -1,3 +1,8 @@
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import Group
+from django.shortcuts import render
+from django.http import HttpResponseRedirect
 from rest_framework import viewsets, permissions
 
 from .models import PoliticalEntity, Territory, DiplomaticRelation
@@ -46,3 +51,26 @@ class DiplomaticRelationViewSet(viewsets.ModelViewSet):
     serializer_class = DiplomaticRelationSerializer
 
     # TODO use request.user to update revision table
+
+
+def signup(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            new_user = form.save(commit=False)
+            new_user.is_staff = True
+            new_user.save()
+            try:
+                new_user.groups.add(Group.objects.get(name='mapper'))
+            except Group.DoesNotExist:
+                pass
+
+            username = form.cleaned_data.get("username")
+            raw_password = form.cleaned_data.get("password1")
+            user = authenticate(username=username, password=raw_password)
+
+            login(request, user)
+            return HttpResponseRedirect("/admin")
+    else:
+        form = UserCreationForm()
+    return render(request, "signup.html", {"form": form})
