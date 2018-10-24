@@ -61,7 +61,7 @@ def signup(request):
             new_user.is_staff = True
             new_user.save()
             try:
-                new_user.groups.add(Group.objects.get(name='mapper'))
+                new_user.groups.add(Group.objects.get(name="mapper"))
             except Group.DoesNotExist:
                 pass
 
