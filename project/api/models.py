@@ -95,7 +95,7 @@ class Territory(models.Model):
 
     start_date = models.DateField(help_text="When this border takes effect")
     end_date = models.DateField(help_text="When this border ceases to exist")
-    geo = models.GeometryField(blank=True, null=True)
+    geo = models.GeometryField(blank=True)
     entity = models.ForeignKey(
         Entity, related_name="territories", on_delete=models.CASCADE
     )
@@ -128,6 +128,10 @@ class Territory(models.Model):
             pass
 
         super(Territory, self).clean(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super(Territory, self).save(*args, **kwargs)
 
     def __str__(self):
         return "%s: %s - %s" % (

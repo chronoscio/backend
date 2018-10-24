@@ -15,8 +15,8 @@ class TerritoryForm(forms.ModelForm):
     def save(self, commit=True):
 
         model = super(TerritoryForm, self).save(commit=False)
-        if not self.cleaned_data['shape_file'] is None:
-            shape_file = self.cleaned_data['shape_file']
+        if not self.cleaned_data["shape_file"] is None:
+            shape_file = self.cleaned_data["shape_file"]
             working_dir = mkdtemp()
             try:
                 shape_zip = ZipFile(shape_file)
@@ -25,7 +25,7 @@ class TerritoryForm(forms.ModelForm):
                 shutil.rmtree(working_dir)
                 raise ValidationError("Could not extract zipfile.")
 
-            shapes_list = glob.glob(working_dir + '/*.shp')
+            shapes_list = glob.glob(working_dir + "/*.shp")
 
             try:
                 ds = gdal.DataSource(shapes_list[0])
@@ -42,7 +42,7 @@ class TerritoryForm(forms.ModelForm):
             except:
                 shutil.rmtree(working_dir)
                 raise ValidationError("Error converting shapefile")
-                
+
         if commit:
             model.save()
 
