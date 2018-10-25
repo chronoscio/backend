@@ -8,4 +8,4 @@ ROUTER.register(r"politicalentities", views.PoliticalEntityViewSet)
 ROUTER.register(r"territories", views.TerritoryViewSet)
 ROUTER.register(r"diprels", views.DiplomaticRelationViewSet)
 
-urlpatterns = [path("", include(ROUTER.urls))]
+urlpatterns = [path("", include(ROUTER.urls)), path("signup/", views.signup)]
