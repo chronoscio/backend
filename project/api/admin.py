@@ -6,3 +6,7 @@ from .models import *
 admin.site.register(Territory, SimpleHistoryAdmin)
 admin.site.register(PoliticalEntity, SimpleHistoryAdmin)
 admin.site.register(DiplomaticRelation, SimpleHistoryAdmin)
+
+admin.site.site_header = "ChronoScio Database"
+admin.site.site_title = "ChronoScio editor"
+admin.site.index_title = "Edit data"
