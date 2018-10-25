@@ -33,7 +33,7 @@ class TerritoryForm(forms.ModelForm):
                 polygons = []
                 for feature in layer:
                     geom = feature.geom.geos
-                    if type(geom) == geos.Polygon:
+                    if isinstance(geom, geos.Polygon):
                         polygons.append(geom)
 
                 if len(polygons) > 0:
