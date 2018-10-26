@@ -27,7 +27,7 @@ class TerritoryForm(forms.ModelForm):
                 shutil.rmtree(working_dir)
                 raise ValidationError("Could not extract zipfile.")
 
-            basename, extension = os.path.splitext(os.path.basename(shape_file.name))
+            basename = os.path.splitext(os.path.basename(shape_file.name))[0]
             shapes_list = glob.glob(working_dir + "/" + basename + "/*.shp")
 
             try:
