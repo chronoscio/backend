@@ -116,11 +116,15 @@ class Territory(models.Model):
 
         try:
             # This date check is inculsive.
-            if Territory.objects.filter(
-                start_date__lte=self.end_date,
-                end_date__gte=self.start_date,
-                entity__exact=self.entity,
-            ).exists():
+            if (
+                Territory.objects.filter(
+                    start_date__lte=self.end_date,
+                    end_date__gte=self.start_date,
+                    entity__exact=self.entity,
+                )
+                .exclude(pk__exact=self.pk)
+                .exists()
+            ):
                 raise ValidationError(
                     "Another territory of this PoliticalEntity exists during this timeframe."
                 )
