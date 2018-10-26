@@ -1,11 +1,13 @@
+import glob
+import shutil
+import os
+
 from django import forms
 from django.contrib.gis import geos, gdal
 from .models import Territory
 from zipfile import ZipFile
 from tempfile import mkdtemp
 from django.core.exceptions import ValidationError
-import glob
-import shutil
 
 
 class TerritoryForm(forms.ModelForm):
@@ -25,7 +27,8 @@ class TerritoryForm(forms.ModelForm):
                 shutil.rmtree(working_dir)
                 raise ValidationError("Could not extract zipfile.")
 
-            shapes_list = glob.glob(working_dir + "/*.shp")
+            basename, extension = os.path.splitext(os.path.basename(shape_file.name))
+            shapes_list = glob.glob(working_dir + "/" + basename + "/*.shp")
 
             try:
                 ds = gdal.DataSource(shapes_list[0])
